@@ -1,4 +1,24 @@
 HELP.md
+
+### Build outputs ###
+target/
+build/
+
+### VS Code ###
+.vscode/
+
+### IDEs ###
+.idea/
+*.iml
+*.ipr
+*.iws
+
+### Maven wrapper ###
+.mvn/wrapper/maven-wrapper.jar
+
+---
+
+HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
