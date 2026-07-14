@@ -11,10 +11,10 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>subscription-service</artifactId>
+	<artifactId>payment-gateway-api</artifactId>
 
-	<name>Subscription Service</name>
-	<description>Mi proyecto de tfg, un sistema de gestión de contratos y pagos recurrentes</description>
+	<name>Payment Gateway API</name>
+	<description>API para la gestión de pagos en el sistema</description>
 	<url>https://github.com/alonsomoros/tfg-proyecto</url>
 
 	<dependencies>

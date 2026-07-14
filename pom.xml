@@ -44,9 +44,9 @@
 	</scm>
 	
 	<modules>
-        <!-- <module>payment-gateway-api</module> -->
+        <module>payment-gateway-api</module>
+        <module>recurring-engine</module>
         <module>subscription-service</module>
-        <!-- <module>recurring-engine</module> -->
     </modules>
 
 	<properties>
