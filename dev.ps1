@@ -7,8 +7,7 @@ $mvnw = Join-Path $root 'mvnw.cmd'
 
 $services = @(
     @{ Name = 'subscription-service'; Pom = 'subscription-service\pom.xml' },
-    @{ Name = 'recurring-engine'; Pom = 'recurring-engine\pom.xml' },
-    @{ Name = 'payment-gateway-api'; Pom = 'payment-gateway-api\pom.xml' }
+    @{ Name = 'recurring-engine'; Pom = 'recurring-engine\pom.xml' }
 )
 
 foreach ($service in $services) {
@@ -21,4 +20,4 @@ foreach ($service in $services) {
         -WindowStyle Maximized | Out-Null
 }
 
-Write-Host 'Los 3 servicios se han lanzado en ventanas separadas.'
+Write-Host 'Los 2 servicios se han lanzado en ventanas separadas.'
