@@ -3,7 +3,7 @@ package com.alonsomoros.tfg.rest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonsomoros.dtos.SubscriptionRequestDto;
+import com.alonsomoros.dto.SubscriptionRequestDto;
 
 import lombok.extern.slf4j.Slf4j;
 
