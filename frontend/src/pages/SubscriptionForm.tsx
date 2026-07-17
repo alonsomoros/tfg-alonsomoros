@@ -1,7 +1,84 @@
+import { useState } from 'react';
+import type { SubscriptionPayload } from '../features/types';
+
 export function SubscriptionForm() {
+    const [formData, setFormData] = useState({
+        cardHolder: '',
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+        email: '',
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError('');
+
+        if (!formData.cardNumber || formData.cardNumber.length < 16) {
+            setError('El número de tarjeta debe tener al menos 16 dígitos.');
+            return;
+        }
+
+        if (!formData.cvv || formData.cvv.length < 3 || isNaN(Number(formData.cvv))) {
+            setError('El CVV debe tener al menos 3 dígitos y ser numérico.');
+            return;
+        }
+
+        if (!formData.email.includes('@')) {
+            setError('Introduce un correo válido.');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            // Simulamos que la petición a la pasarela tarda 1.5 segundos
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            const mockToken = `tok_mock_${Math.random().toString(36).substring(2, 10)}`;
+            
+            const last4Digits = formData.cardNumber.slice(-4);
+            const [expMonth, expYear] = formData.expiryDate.split('/');
+
+            const payloadToBackend: SubscriptionPayload = {
+                customerEmail: formData.email,
+                planId: "PREMIUM_MENSUAL",
+                paymentInfo: {
+                    provider: "MOCK",
+                    token: mockToken,
+                    cardHolder: formData.cardHolder,
+                    expiryMonth: expMonth || "12",
+                    expiryYear: expYear || "26",
+                    last4: last4Digits
+                }
+            };
+
+            console.log("Payload para el Backend - Subscription Service: ", payloadToBackend);
+            
+            // TODO: Aquí haremos el axios.post('/api/subscriptions/contracts', payloadToBackend)
+
+            alert('Simulación exitosa. Revisa la consola.');
+        } catch (err) {
+            setError('Hubo un error al procesar el pago.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
     return (
         <main className="payment-page">
-            <form className="payment-card">
+            <form className="payment-card" onSubmit={handleSubmit}>
                 <header className="payment-card__header">
                     <button className="payment-card__close" type="button" aria-label="Cerrar formulario">
                         X
@@ -14,37 +91,38 @@ export function SubscriptionForm() {
                 </header>
 
                 <p className="payment-card__note">(*) Completa los datos para autorizar el pago recurrente.</p>
+                {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 
                 <div className="payment-form">
                     <label className="payment-field">
                         <span>Titular de la Tarjeta</span>
-                        <input type="text" name="cardHolder" placeholder="Titular de la Tarjeta" />
+                        <input type="text" name="cardHolder" placeholder="Titular de la Tarjeta" value={formData.cardHolder} onChange={handleChange} required/>
                     </label>
 
                     <label className="payment-field">
                         <span>Número de la Tarjeta</span>
-                        <input type="text" name="cardNumber" placeholder="Número de la Tarjeta" inputMode="numeric" />
+                        <input type="text" name="cardNumber" placeholder="Número de la Tarjeta" inputMode="numeric" value={formData.cardNumber} onChange={handleChange} required/>
                     </label>
 
                     <div className="payment-form__split">
                         <label className="payment-field">
                             <span>Fecha Caducidad</span>
-                            <input type="text" name="expiryDate" placeholder="Fecha Caducidad" inputMode="numeric" />
+                            <input type="date" min={new Date().toISOString().split('T')[0]} name="expiryDate" placeholder="Fecha Caducidad" inputMode="numeric" value={formData.expiryDate} onChange={handleChange} required/>
                         </label>
 
                         <label className="payment-field">
                             <span>CVV</span>
-                            <input type="password" name="cvv" placeholder="CVV" inputMode="numeric" />
+                            <input type="password" name="cvv" placeholder="CVV" inputMode="numeric" value={formData.cvv} onChange={handleChange} required/>
                         </label>
                     </div>
 
                     <label className="payment-field">
                         <span>Correo Electrónico</span>
-                        <input type="email" name="email" placeholder="Correo Elec" />
+                        <input type="email" name="email" placeholder="Correo Electrónico" value={formData.email} onChange={handleChange} required/>
                     </label>
 
-                    <button className="payment-card__submit" type="submit">
-                        Pagar
+                    <button className="payment-card__submit" type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? 'Procesando...' : 'Pagar'}
                     </button>
                 </div>
             </form>
