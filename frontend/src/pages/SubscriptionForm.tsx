@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createSubscription } from '../api/subscriptionServiceApi';
 import type { SubscriptionPayload } from '../features/types';
 
 export function SubscriptionForm() {
@@ -66,7 +67,9 @@ export function SubscriptionForm() {
 
             console.log("Payload para el Backend - Subscription Service: ", payloadToBackend);
             
-            // TODO: Aquí haremos el axios.post('/api/subscriptions/contracts', payloadToBackend)
+            const response = await createSubscription(payloadToBackend);
+
+            console.log("Respuesta del Backend - Subscription Service: ", response);
 
             alert('Simulación exitosa. Revisa la consola.');
         } catch (err) {
