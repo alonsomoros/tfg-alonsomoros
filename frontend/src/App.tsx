@@ -1,9 +1,11 @@
-import { DashboardPage } from './pages/DashboardPage'
 import './App.css'
+// import { DashboardPage } from './pages/DashboardPage'
+import { SubscriptionForm } from './pages/SubscriptionForm'
 
 function App() {
   return (
-    <DashboardPage></DashboardPage>
+    // <DashboardPage></DashboardPage>
+    <SubscriptionForm></SubscriptionForm>
   )
 }
 
