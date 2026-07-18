@@ -50,7 +50,8 @@ export function SubscriptionForm() {
             const mockToken = `tok_mock_${Math.random().toString(36).substring(2, 10)}`;
             
             const last4Digits = formData.cardNumber.slice(-4);
-            const [expMonth, expYear] = formData.expiryDate.split('/');
+            const [expYear, expMonth] = formData.expiryDate.split('-');
+            console.log("Datos del Formulario: ", formData);
 
             const payloadToBackend: SubscriptionPayload = {
                 customerEmail: formData.email,
