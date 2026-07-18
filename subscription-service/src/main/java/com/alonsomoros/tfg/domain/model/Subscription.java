@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.entity;
+package com.alonsomoros.tfg.domain.model;
 
 import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
 

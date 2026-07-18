@@ -2,9 +2,9 @@ package com.alonsomoros.tfg.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.alonsomoros.tfg.dto.request.SubscriptionRequestDto;
-import com.alonsomoros.tfg.dto.response.SubscriptionResponseDto;
-import com.alonsomoros.tfg.entity.Subscription;
+import com.alonsomoros.tfg.domain.model.Subscription;
+import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
+import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
 import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
 
 @Component

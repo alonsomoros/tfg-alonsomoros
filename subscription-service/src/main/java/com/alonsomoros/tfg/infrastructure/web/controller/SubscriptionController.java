@@ -1,11 +1,11 @@
-package com.alonsomoros.tfg.rest;
+package com.alonsomoros.tfg.infrastructure.web.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonsomoros.tfg.dto.request.SubscriptionRequestDto;
-import com.alonsomoros.tfg.dto.response.SubscriptionResponseDto;
-import com.alonsomoros.tfg.service.SubscriptionServiceImpl;
+import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
+import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
+import com.alonsomoros.tfg.application.SubscriptionServiceImpl;
 import com.alonsomoros.tfg.utils.EnpointConstants;
 
 import lombok.AllArgsConstructor;

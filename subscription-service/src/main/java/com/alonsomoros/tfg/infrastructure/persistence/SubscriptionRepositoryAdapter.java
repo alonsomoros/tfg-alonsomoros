@@ -1,8 +1,8 @@
-package com.alonsomoros.tfg.persistence;
+package com.alonsomoros.tfg.infrastructure.persistence;
 
 import org.springframework.stereotype.Component;
 
-import com.alonsomoros.tfg.entity.Subscription;
+import com.alonsomoros.tfg.domain.model.Subscription;
 
 import lombok.RequiredArgsConstructor;
 

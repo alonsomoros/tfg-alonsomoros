@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.dto.response;
+package com.alonsomoros.tfg.infrastructure.web.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

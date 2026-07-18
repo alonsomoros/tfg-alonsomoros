@@ -1,12 +1,13 @@
-package com.alonsomoros.tfg.service;
+package com.alonsomoros.tfg.application;
 
 import org.springframework.stereotype.Service;
 
-import com.alonsomoros.tfg.dto.request.SubscriptionRequestDto;
-import com.alonsomoros.tfg.dto.response.SubscriptionResponseDto;
-import com.alonsomoros.tfg.entity.Subscription;
+import com.alonsomoros.tfg.infrastructure.persistence.SubscriptionRepositoryAdapter;
+import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
+import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
+import com.alonsomoros.tfg.domain.model.Subscription;
+import com.alonsomoros.tfg.domain.service.ISubscriptionService;
 import com.alonsomoros.tfg.mapper.SubscriptionMapper;
-import com.alonsomoros.tfg.persistence.SubscriptionRepositoryAdapter;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
