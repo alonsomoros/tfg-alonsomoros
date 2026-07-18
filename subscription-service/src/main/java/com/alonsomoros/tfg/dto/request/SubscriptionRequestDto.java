@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.dto;
+package com.alonsomoros.tfg.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
