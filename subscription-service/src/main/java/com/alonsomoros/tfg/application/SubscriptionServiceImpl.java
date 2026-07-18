@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
+import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
 import com.alonsomoros.tfg.domain.service.ISubscriptionService;
@@ -25,8 +26,7 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
     public SubscriptionResponseDto createSubscription(SubscriptionRequestDto subscriptionRequestDto) {
         log.info("Creating subscription for customer: {}", subscriptionRequestDto.customerEmail());
         if (subscriptionRepository.hasOngoingSubscription(subscriptionRequestDto.customerEmail(), subscriptionRequestDto.planId())) {
-            log.warn("Customer {} already has an ongoing subscription for plan {}", subscriptionRequestDto.customerEmail(), subscriptionRequestDto.planId());
-            throw new RuntimeException("Customer already has an ongoing subscription for this plan");
+            throw new SubscriptionAlreadyOngoingException("Customer already has an ongoing subscription for plan " + subscriptionRequestDto.planId());
         }
 
         Subscription subscription = subscriptionMapper.toDomain(subscriptionRequestDto);

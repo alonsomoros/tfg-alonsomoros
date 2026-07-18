@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.SubscriptionEntity;
@@ -38,7 +39,7 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
     @Override
     public Subscription findById(Long id) {
         log.info("Finding subscription by ID: {}", id);
-        SubscriptionEntity subscriptionEntity = subscriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Subscription not found"));
+        SubscriptionEntity subscriptionEntity = subscriptionRepository.findById(id).orElseThrow(() -> new SubscriptionNotFoundException("Subscription not found with ID: " + id));
         return subscriptionEntityMapper.toDomain(subscriptionEntity);
     }
 
