@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.domain.model;
+package com.alonsomoros.tfg.infrastructure.persistence.entity;
 
 import java.time.LocalDateTime;
 

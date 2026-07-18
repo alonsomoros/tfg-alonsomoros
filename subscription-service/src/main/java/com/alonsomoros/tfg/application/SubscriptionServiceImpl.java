@@ -2,7 +2,7 @@ package com.alonsomoros.tfg.application;
 
 import org.springframework.stereotype.Service;
 
-import com.alonsomoros.tfg.infrastructure.persistence.SubscriptionRepositoryAdapter;
+import com.alonsomoros.tfg.infrastructure.persistence.adapter.SubscriptionRepositoryAdapter;
 import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
 import com.alonsomoros.tfg.domain.model.Subscription;
@@ -25,7 +25,7 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
     @Override
     public SubscriptionResponseDto createSubscription(SubscriptionRequestDto subscriptionRequestDto) {
         log.info("Creating subscription for customer: {}", subscriptionRequestDto.customerEmail());
-        Subscription subscription = subscriptionRepository.save(subscriptionMapper.toEntity(subscriptionRequestDto));
+        Subscription subscription = subscriptionRepository.save(subscriptionMapper.toDomain(subscriptionRequestDto));
         return subscriptionMapper.toResponseDto(subscription);
     }
     

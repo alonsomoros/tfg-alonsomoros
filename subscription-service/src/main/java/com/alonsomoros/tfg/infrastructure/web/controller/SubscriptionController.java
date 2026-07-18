@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
-import com.alonsomoros.tfg.application.SubscriptionServiceImpl;
+import com.alonsomoros.tfg.domain.service.ISubscriptionService;
 import com.alonsomoros.tfg.utils.EnpointConstants;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 public class SubscriptionController {
 
-    private final SubscriptionServiceImpl subscriptionService;
+    private final ISubscriptionService subscriptionService;
 
     @GetMapping("/health")
     public String health() {
@@ -31,10 +31,9 @@ public class SubscriptionController {
 
     @PostMapping(EnpointConstants.CREATE_SUBSCRIPTION)
     public SubscriptionResponseDto postMethodName(@RequestBody SubscriptionRequestDto subscriptionRequestDto) {
-        log.info("Processing subscription request for customer: {}", subscriptionRequestDto.customerEmail());
-        
+        log.info("START - Processing [SubscriptionRequest] for customer: {}", subscriptionRequestDto.customerEmail());
         SubscriptionResponseDto response = subscriptionService.createSubscription(subscriptionRequestDto);
-
+        log.info("END - Processed [SubscriptionRequest] for customer: {}", response.customerEmail());
         return response;
     }
 
