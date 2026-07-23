@@ -24,6 +24,7 @@ public class SubscriptionMapper {
                 .customerEmail(subscription.getCustomerEmail())
                 .planId(subscription.getPlanId())
                 .status(subscription.getStatus())
+                .id(subscription.getId())
                 .build();
     }
 
@@ -32,6 +33,7 @@ public class SubscriptionMapper {
                 .customerEmail(subscriptionEntity.getCustomerEmail())
                 .planId(subscriptionEntity.getPlanId())
                 .status(subscriptionEntity.getStatus())
+                .id(subscriptionEntity.getId())
                 .build();
     }
 

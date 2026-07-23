@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
+import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
@@ -21,6 +22,7 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
     private final SubscriptionRepositoryPort subscriptionRepository;
     private final SubscriptionMapper subscriptionMapper;
+    private final RecurringEngineClientPort recurringEngineClient;
 
     @Override
     public SubscriptionResponseDto createSubscription(SubscriptionRequestDto subscriptionRequestDto) {
@@ -33,8 +35,20 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
         subscription.setStatus(SubscriptionStatusEnum.PENDING);
         subscription = subscriptionRepository.save(subscription);
 
-        // TODO: Llamar al 8081 con trycatch y client, en el try meter el save() con estado ACTIVE
-        // En el catch no metemos excepcion por que queremos devolver 200 PENDING y gestionar el error internamente
+        log.info("🔥🔥🔥 ID tras el primer save: {}", subscription.getId());
+
+        try {
+            
+            recurringEngineClient.sendPaymentToken(
+                subscription.getId(), 
+                subscriptionRequestDto.paymentInfo()
+            );
+
+            subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
+            subscription = subscriptionRepository.save(subscription);
+        } catch (Exception e) {
+            log.error("Error while calling <<<Recurring Engine Component>>>, Subscription ID: {} will remain PENDING", subscription.getId(), e);
+        }
 
         return subscriptionMapper.toResponseDto(subscription);
     }

@@ -15,6 +15,8 @@ import lombok.Setter;
 @Builder
 public class Subscription {
 
+    private Long id;
+
     private String customerEmail;
 
     private String planId;
