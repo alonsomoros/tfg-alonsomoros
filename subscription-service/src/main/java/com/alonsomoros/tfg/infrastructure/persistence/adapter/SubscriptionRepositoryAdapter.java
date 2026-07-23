@@ -2,6 +2,7 @@ package com.alonsomoros.tfg.infrastructure.persistence.adapter;
 
 import java.util.List;
 
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Component;
 
 import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
@@ -32,7 +33,7 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
             return subscriptionEntityMapper.toDomain(savedEntity);
         } catch (Exception e) {
             log.error("Error saving subscription for customer: {}", subscription.getCustomerEmail(), e);
-            throw new RuntimeException("Error saving subscription", e);
+            throw new DataAccessResourceFailureException("Error with Database Connection while saving subscription ID: " + subscription.getId(), e);
         }
     }
 
