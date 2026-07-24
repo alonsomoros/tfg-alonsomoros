@@ -25,15 +25,15 @@ public class RecurringEngineController {
 
     @PostMapping("/tokens")
     public ResponseEntity<Void> receiveToken(@RequestBody TokenRegistrationRequestDto request) {
-        log.info("¡Llamada recibida desde el 8080!");
-        log.info("-> ID Suscripción: {}", request.subscriptionId());
-        log.info("-> Pasarela (Provider): {}", request.paymentInfo().provider());
-        log.info("-> Token seguro: {}", request.paymentInfo().token());
+        log.info("Request received from the 8080 service.");
+        log.info("-> Subscription ID: {}", request.subscriptionId());
+        log.info("-> Payment provider: {}", request.paymentInfo().provider());
+        log.info("-> Secure token: {}", request.paymentInfo().token());
 
-        // TODO: En el futuro, aquí mapearemos este DTO a un modelo de Dominio 
-        // y llamaremos a un Service para guardar el token en la BBDD del 8081.
+        // TODO: In the future, this DTO will be mapped to a domain model
+        // and a service will persist the token in the 8081 database.
 
-        // Por ahora, devolvemos un 200 OK para que el 8080 sepa que todo ha ido bien
+        // For now, return 200 OK so the 8080 service knows everything succeeded.
         return ResponseEntity.ok().build();
     }
     

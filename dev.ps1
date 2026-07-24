@@ -20,4 +20,4 @@ foreach ($service in $services) {
         -WindowStyle Maximized | Out-Null
 }
 
-Write-Host 'Los 2 servicios se han lanzado en ventanas separadas.'
+Write-Host 'The two services have been launched in separate windows.'

@@ -25,24 +25,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 @RequestMapping("/subscriptions")
 @RestController
-@Tag(name = "Subscription Controller", description = "Endpoints para la gestión de suscripciones")
+@Tag(name = "Subscription Controller", description = "Endpoints for subscription management")
 public class SubscriptionController {
 
     private final ISubscriptionService subscriptionService;
 
-    @Operation(summary = "Verificar estado del servicio", description = "Endpoint de health check para comprobar si el servicio está activo")
+    @Operation(summary = "Check service health", description = "Health check endpoint used to verify that the service is running")
     @GetMapping("/health")
     public String health() {
         log.info("Health check endpoint called.");
         return "Subscription service is healthy.";
     }
 
-    @Operation(summary = "Crear nueva suscripción", description = "Registra una nueva suscripción basándose en los datos proporcionados")
+    @Operation(summary = "Create a new subscription", description = "Registers a new subscription using the provided request data")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Suscripción creada exitosamente", 
+        @ApiResponse(responseCode = "200", description = "Subscription created successfully", 
             content = @Content(schema = @Schema(implementation = SubscriptionResponseDto.class))),
-        @ApiResponse(responseCode = "400", description = "Datos de solicitud inválidos"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        @ApiResponse(responseCode = "400", description = "Invalid request data"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping(EnpointConstants.CREATE_SUBSCRIPTION)
     public SubscriptionResponseDto createSubscription(@RequestBody SubscriptionRequestDto subscriptionRequestDto) {

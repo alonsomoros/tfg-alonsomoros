@@ -44,14 +44,14 @@ export function SubscriptionForm() {
         setIsSubmitting(true);
 
         try {
-            // Simulamos que la petición a la pasarela tarda 1.5 segundos
+            // Simulate a 1.5 second delay for the payment gateway call.
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             const mockToken = `tok_mock_${Math.random().toString(36).substring(2, 10)}`;
             
             const last4Digits = formData.cardNumber.slice(-4);
             const [expYear, expMonth] = formData.expiryDate.split('-');
-            console.log("Datos del Formulario: ", formData);
+            console.log('Form data:', formData);
 
             const payloadToBackend: SubscriptionPayload = {
                 customerEmail: formData.email,
@@ -66,15 +66,15 @@ export function SubscriptionForm() {
                 }
             };
 
-            console.log("Payload para el Backend - Subscription Service: ", payloadToBackend);
+            console.log('Payload for the Subscription Service backend:', payloadToBackend);
             
             const response = await createSubscription(payloadToBackend);
 
-            console.log("Respuesta del Backend - Subscription Service: ", response);
+            console.log('Subscription Service backend response:', response);
 
-            alert('Simulación exitosa. Revisa la consola.');
+            alert('Simulation successful. Check the console.');
         } catch (err) {
-            setError('Hubo un error al procesar el pago.');
+            setError('There was an error processing the payment.');
         } finally {
             setIsSubmitting(false);
         }

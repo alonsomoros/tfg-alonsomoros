@@ -11,7 +11,7 @@ export const httpClient = axios.create({
 httpClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.error('Error en la llamada HTTP:', error.response?.data || error.message);
+        console.error('HTTP request error:', error.response?.data || error.message);
         return Promise.reject(error);
     }
 );
