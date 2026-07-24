@@ -1,0 +1,26 @@
+services:
+  postgres-subscription:
+    image: postgres:15-alpine
+    container_name: tfg-postgres-subscription
+    env_file:
+      - .env.subscription
+    ports:
+      - "5432:5432"
+    volumes:
+      - subscription_data:/var/lib/postgresql/data
+    restart: no
+
+  postgres-recurring:
+    image: postgres:15-alpine
+    container_name: tfg-postgres-recurring
+    env_file:
+      - .env.recurring
+    ports:
+      - "5433:5432"
+    volumes:
+      - recurring_data:/var/lib/postgresql/data
+    restart: no
+
+volumes:
+  subscription_data:
+  recurring_data:
