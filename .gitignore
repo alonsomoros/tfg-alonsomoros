@@ -53,4 +53,6 @@ build/
 .vscode/
 
 .env
+.env.subscription
+.env.recurring
 package-lock.json
