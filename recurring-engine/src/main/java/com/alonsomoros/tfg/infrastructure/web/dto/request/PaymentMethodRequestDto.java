@@ -1,6 +1,6 @@
 package com.alonsomoros.tfg.infrastructure.web.dto.request;
 
-public record TokenRegistrationRequestDto(
+public record PaymentMethodRequestDto(
     Long subscriptionId,
     PaymentInfoDto paymentInfo
 ) {}
