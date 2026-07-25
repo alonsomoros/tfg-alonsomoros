@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.utils;
+package com.alonsomoros.tfg.domain.model;
 
 public enum SubscriptionStatusEnum {
     ACTIVE,

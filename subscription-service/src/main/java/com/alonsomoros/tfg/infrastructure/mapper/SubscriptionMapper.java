@@ -1,20 +1,20 @@
-package com.alonsomoros.tfg.mapper;
+package com.alonsomoros.tfg.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
 import com.alonsomoros.tfg.domain.model.Subscription;
+import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.SubscriptionEntity;
-import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
-import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
 
 @Component
 public class SubscriptionMapper {
     
-    public Subscription toDomain(SubscriptionRequestDto subscriptionRequestDto) {
+    public Subscription toDomain(CreateSubscriptionCommand command) {
         return Subscription.builder()
-                .customerEmail(subscriptionRequestDto.customerEmail())
-                .planId(subscriptionRequestDto.planId())
+                .customerEmail(command.customerEmail())
+                .planId(command.planId())
                 .status(SubscriptionStatusEnum.PENDING)
                 .build();
     }
