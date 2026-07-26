@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
 import com.alonsomoros.tfg.domain.model.Subscription;
+import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
+import com.alonsomoros.tfg.infrastructure.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.SubscriptionEntity;
 import com.alonsomoros.tfg.infrastructure.persistence.repository.SubscriptionRepository;
-import com.alonsomoros.tfg.mapper.SubscriptionMapper;
-import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,5 @@
 package com.alonsomoros.tfg.domain.model;
 
-import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

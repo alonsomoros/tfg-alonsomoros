@@ -1,6 +1,6 @@
 package com.alonsomoros.tfg.infrastructure.persistence.entity;
 
-import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
+import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
