@@ -1,7 +1,7 @@
 package com.alonsomoros.tfg.application.port.out;
 
-import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto.PaymentInfo;
+import com.alonsomoros.tfg.application.command.PaymentDetailsCommand;
 
 public interface RecurringEngineClientPort {
-    void sendPaymentToken(Long subscriptionId, PaymentInfo paymentInfo);
+    void sendPaymentToken(Long subscriptionId, PaymentDetailsCommand paymentInfoCommand);
 }

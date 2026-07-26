@@ -3,8 +3,10 @@ package com.alonsomoros.tfg.infrastructure.web.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonsomoros.tfg.infrastructure.web.dto.request.TokenRegistrationRequestDto;
+import com.alonsomoros.tfg.domain.service.IRecurringEngineService;
+import com.alonsomoros.tfg.infrastructure.web.dto.request.PaymentMethodRequestDto;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 @RequestMapping("/recurring")
 @RestController
+@AllArgsConstructor
 public class RecurringEngineController {
+
+    private final IRecurringEngineService recurringEngineService;
 
     @GetMapping("/health")
     public String health() {
@@ -24,16 +29,11 @@ public class RecurringEngineController {
     }
 
     @PostMapping("/tokens")
-    public ResponseEntity<Void> receiveToken(@RequestBody TokenRegistrationRequestDto request) {
-        log.info("Request received from the 8080 service.");
-        log.info("-> Subscription ID: {}", request.subscriptionId());
-        log.info("-> Payment provider: {}", request.paymentInfo().provider());
-        log.info("-> Secure token: {}", request.paymentInfo().token());
+    public ResponseEntity<Void> receiveToken(@RequestBody PaymentMethodRequestDto request) {
+        log.info("Request received from <<<Subscription Service>>> for subscription ID: {}", request.subscriptionId());
 
-        // TODO: In the future, this DTO will be mapped to a domain model
-        // and a service will persist the token in the 8081 database.
+        recurringEngineService.processPaymentToken(request);
 
-        // For now, return 200 OK so the 8080 service knows everything succeeded.
         return ResponseEntity.ok().build();
     }
     

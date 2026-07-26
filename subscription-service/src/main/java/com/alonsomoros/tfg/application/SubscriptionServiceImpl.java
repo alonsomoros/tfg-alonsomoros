@@ -2,15 +2,16 @@ package com.alonsomoros.tfg.application;
 
 import org.springframework.stereotype.Service;
 
+import com.alonsomoros.tfg.infrastructure.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
+import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
 import com.alonsomoros.tfg.domain.model.Subscription;
+import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
 import com.alonsomoros.tfg.domain.service.ISubscriptionService;
-import com.alonsomoros.tfg.mapper.SubscriptionMapper;
-import com.alonsomoros.tfg.utils.SubscriptionStatusEnum;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,23 +26,21 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
     private final RecurringEngineClientPort recurringEngineClient;
 
     @Override
-    public SubscriptionResponseDto createSubscription(SubscriptionRequestDto subscriptionRequestDto) {
-        log.info("Creating subscription for customer: {}", subscriptionRequestDto.customerEmail());
-        if (subscriptionRepository.hasOngoingSubscription(subscriptionRequestDto.customerEmail(), subscriptionRequestDto.planId())) {
-            throw new SubscriptionAlreadyOngoingException("Customer already has an ongoing subscription for plan " + subscriptionRequestDto.planId());
+    public SubscriptionResponseDto createSubscription(CreateSubscriptionCommand createSubscriptionCommand) {
+        log.info("Creating subscription for customer: {}", createSubscriptionCommand.customerEmail());
+        if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId())) {
+            throw new SubscriptionAlreadyOngoingException("Customer already has an ongoing subscription for plan " + createSubscriptionCommand.planId());
         }
 
-        Subscription subscription = subscriptionMapper.toDomain(subscriptionRequestDto);
+        Subscription subscription = subscriptionMapper.toDomain(createSubscriptionCommand);
         subscription.setStatus(SubscriptionStatusEnum.PENDING);
         subscription = subscriptionRepository.save(subscription);
-
-        log.info("🔥🔥🔥 ID tras el primer save: {}", subscription.getId());
 
         try {
             
             recurringEngineClient.sendPaymentToken(
                 subscription.getId(), 
-                subscriptionRequestDto.paymentInfo()
+                createSubscriptionCommand.paymentInfo()
             );
 
             subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
