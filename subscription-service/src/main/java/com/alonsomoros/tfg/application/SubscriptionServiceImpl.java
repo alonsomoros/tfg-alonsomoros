@@ -3,7 +3,6 @@ package com.alonsomoros.tfg.application;
 import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.infrastructure.mapper.SubscriptionMapper;
-import com.alonsomoros.tfg.infrastructure.web.dto.request.SubscriptionRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;

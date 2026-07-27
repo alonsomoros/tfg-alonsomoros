@@ -27,7 +27,8 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
                 paymentDetails.token(),
                 paymentDetails.cardHolder(),
                 paymentDetails.expiryMonth(),
-                paymentDetails.expiryYear()
+                paymentDetails.expiryYear(),
+                paymentDetails.last4()
             );
 
         TokenRequestDto request = new TokenRequestDto(subscriptionId, feignDto);

@@ -5,7 +5,8 @@ public record PaymentInfoRequestDto(
     String token,
     String cardHolder,
     String expiryMonth,
-    String expiryYear
+    String expiryYear,
+    String last4
 ) {
     
 }
