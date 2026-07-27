@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.infrastructure.mapper;
+package com.alonsomoros.tfg.infrastructure.persistence.mapper;
 
 import org.springframework.stereotype.Component;
 

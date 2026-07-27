@@ -9,8 +9,8 @@ import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
-import com.alonsomoros.tfg.infrastructure.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.SubscriptionEntity;
+import com.alonsomoros.tfg.infrastructure.persistence.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.persistence.repository.SubscriptionRepository;
 
 import lombok.RequiredArgsConstructor;
