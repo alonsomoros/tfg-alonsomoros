@@ -1,9 +1,10 @@
-package com.alonsomoros.tfg.infrastructure.client;
+package com.alonsomoros.tfg.infrastructure.client.adapter;
 
 import org.springframework.stereotype.Component;
 
 import com.alonsomoros.tfg.application.command.PaymentDetailsCommand;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
+import com.alonsomoros.tfg.infrastructure.client.feign.RecurringEngineFeignClient;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.PaymentInfoRequestDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.TokenRequestDto;
 
