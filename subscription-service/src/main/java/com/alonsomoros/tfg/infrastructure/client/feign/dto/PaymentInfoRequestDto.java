@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.infrastructure.client.dto;
+package com.alonsomoros.tfg.infrastructure.client.feign.dto;
 
 public record PaymentInfoRequestDto(
     String provider,
