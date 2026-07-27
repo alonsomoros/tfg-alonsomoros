@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMandateEntity;
 
 @Repository
-public interface RecurringEngineRepository extends JpaRepository<PaymentMandateEntity, Long> {
+public interface PaymentMandateRepository extends JpaRepository<PaymentMandateEntity, Long> {
     Optional<PaymentMandateEntity> findBySubscriptionId(Long subscriptionId);
 
     @Query("SELECT COUNT(p) > 0 FROM PaymentMandateEntity p " +

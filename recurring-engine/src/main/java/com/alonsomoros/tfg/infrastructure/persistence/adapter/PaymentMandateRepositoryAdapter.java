@@ -3,9 +3,9 @@ package com.alonsomoros.tfg.infrastructure.persistence.adapter;
 import org.springframework.stereotype.Component;
 
 import com.alonsomoros.tfg.domain.model.PaymentMandate;
-import com.alonsomoros.tfg.domain.port.RecurringEngineRepositoryPort;
+import com.alonsomoros.tfg.domain.port.PaymentMandateRepositoryPort;
 import com.alonsomoros.tfg.infrastructure.mapper.PaymentMandateMapper;
-import com.alonsomoros.tfg.infrastructure.persistence.repository.RecurringEngineRepository;
+import com.alonsomoros.tfg.infrastructure.persistence.repository.PaymentMandateRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PaymentMandateRepositoryAdapter implements RecurringEngineRepositoryPort {
+public class PaymentMandateRepositoryAdapter implements PaymentMandateRepositoryPort {
 
-    private final RecurringEngineRepository repository;
+    private final PaymentMandateRepository repository;
     private final PaymentMandateMapper mapper;
 
     @Override

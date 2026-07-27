@@ -3,9 +3,9 @@ package com.alonsomoros.tfg.application.service;
 import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.application.command.RegisterMandateCommand;
+import com.alonsomoros.tfg.application.port.in.IPaymentMandateService;
 import com.alonsomoros.tfg.domain.model.PaymentMandate;
-import com.alonsomoros.tfg.domain.port.RecurringEngineRepositoryPort;
-import com.alonsomoros.tfg.domain.service.IPaymentMandateService;
+import com.alonsomoros.tfg.domain.port.PaymentMandateRepositoryPort;
 import com.alonsomoros.tfg.infrastructure.mapper.PaymentMandateMapper;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class PaymentMandateServiceImpl implements IPaymentMandateService {
 
-    private final RecurringEngineRepositoryPort repositoryPort;
+    private final PaymentMandateRepositoryPort repositoryPort;
     private final PaymentMandateMapper paymentMandateMapper;
 
     @Override

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonsomoros.tfg.domain.service.IPaymentMandateService;
+import com.alonsomoros.tfg.application.port.in.IPaymentMandateService;
 import com.alonsomoros.tfg.infrastructure.web.dto.request.PaymentMethodRequestDto;
 import com.alonsomoros.tfg.infrastructure.web.mapper.WebRecurringMapper;
 
