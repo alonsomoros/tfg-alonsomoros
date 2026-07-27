@@ -31,11 +31,10 @@ public class PaymentMethodController {
 
     @PostMapping("/tokens")
     public ResponseEntity<Void> receiveToken(@RequestBody PaymentMethodRequestDto requestDto) {
-        log.info("Request received from <<<Subscription Service>>> for subscription ID: {}", requestDto.subscriptionId());
+        log.info("Received [Payment Method Request] from <<<Subscription Service Component>>> | ID: {}", requestDto.subscriptionId());
         recurringEngineService.registerPaymentMandate(paymentMethodMapper.toCommand(requestDto));
-        log.info("Request processed successfully for subscription ID: {}", requestDto.subscriptionId());
+        log.info("Processed [Payment Method Request] successfully | ID: {}", requestDto.subscriptionId());
         return ResponseEntity.ok().build();
     }
-    
     
 }

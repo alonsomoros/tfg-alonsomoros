@@ -46,9 +46,9 @@ public class SubscriptionController {
     })
     @PostMapping(EnpointConstants.CREATE_SUBSCRIPTION)
     public SubscriptionResponseDto createSubscription(@RequestBody SubscriptionRequestDto subscriptionRequestDto) {
-        log.info("START - Processing [SubscriptionRequest] for customer: {}", subscriptionRequestDto.customerEmail());
+        log.info("Received [SubscriptionRequest] | email: {}", subscriptionRequestDto.customerEmail());
         SubscriptionResponseDto response = subscriptionService.createSubscription(webSubscriptionMapper.toCommand(subscriptionRequestDto));
-        log.info("END - Processed [SubscriptionRequest] for customer: {}", response.customerEmail());
+        log.info("Processed [SubscriptionRequest] successfully | email: {}", response.customerEmail());
         return response;
     }
 

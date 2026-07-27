@@ -26,17 +26,18 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
     @Override
     public SubscriptionResponseDto createSubscription(CreateSubscriptionCommand createSubscriptionCommand) {
-        log.info("Creating subscription for customer: {}", createSubscriptionCommand.customerEmail());
+        log.info("Creating new subscription | email: {}, plan: {}", createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId());
         if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId())) {
-            throw new SubscriptionAlreadyOngoingException("Customer already has an ongoing subscription for plan " + createSubscriptionCommand.planId());
+            throw new SubscriptionAlreadyOngoingException("Subscription already ongoing | email: " + createSubscriptionCommand.customerEmail() + ", plan: " + createSubscriptionCommand.planId());
         }
 
         Subscription subscription = subscriptionMapper.toDomain(createSubscriptionCommand);
         subscription.setStatus(SubscriptionStatusEnum.PENDING);
         subscription = subscriptionRepository.save(subscription);
+        log.debug("Subscription PENDING saved in BBDD | subscriptionId: {}", subscription.getId());
 
         try {
-            
+            log.info("Calling <<<Recurring Engine Component>>> to save [PaymentMethod] | subscriptionId: {}", subscription.getId());
             recurringEngineClient.sendPaymentToken(
                 subscription.getId(), 
                 createSubscriptionCommand.paymentInfo()
@@ -44,8 +45,9 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
             subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
             subscription = subscriptionRepository.save(subscription);
+            log.info("Subscription ACTIVE saved in BBDD | subscriptionId: {}", subscription.getId());
         } catch (Exception e) {
-            log.error("Error while calling <<<Recurring Engine Component>>>, Subscription ID: {} will remain PENDING", subscription.getId(), e);
+            log.error("Error while calling <<<Recurring Engine Component>>> will remain PENDING | subscriptionId: {}", subscription.getId(), e);
         }
 
         return subscriptionMapper.toResponseDto(subscription);

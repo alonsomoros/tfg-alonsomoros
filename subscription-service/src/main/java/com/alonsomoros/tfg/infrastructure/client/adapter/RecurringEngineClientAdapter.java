@@ -20,7 +20,7 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
 
     @Override
     public void sendPaymentToken(Long subscriptionId, PaymentDetailsCommand paymentDetails) {
-        log.info("Calling <<<Recurring Engine>>> for subscription ID: {}", subscriptionId);
+        log.info("Sending [Payment Method] to <<<Recurring Engine Component>>> | ID: {}", subscriptionId);
 
         PaymentInfoRequestDto feignDto = 
             new PaymentInfoRequestDto(
