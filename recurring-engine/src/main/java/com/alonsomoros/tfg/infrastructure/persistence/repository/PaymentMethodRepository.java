@@ -13,7 +13,7 @@ import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMethodEntity
 public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEntity, Long> {
     Optional<PaymentMethodEntity> findBySubscriptionId(Long subscriptionId);
 
-    @Query("SELECT COUNT(p) > 0 FROM PaymentMandateEntity p " +
+    @Query("SELECT COUNT(p) > 0 FROM PaymentMethodEntity p " +
             "WHERE p.subscriptionId = :subscriptionId " +
             "AND p.active = true")
     boolean existsActiveBySubscriptionId(@Param("subscriptionId") Long subscriptionId);
