@@ -1,7 +1,7 @@
 package com.alonsomoros.tfg.domain.service;
 
-import com.alonsomoros.tfg.infrastructure.web.dto.request.PaymentMethodRequestDto;
+import com.alonsomoros.tfg.application.command.RegisterMandateCommand;
 
 public interface IRecurringEngineService {
-    void processPaymentToken(PaymentMethodRequestDto request);
+    void registerPaymentMandate(RegisterMandateCommand request);
 }
