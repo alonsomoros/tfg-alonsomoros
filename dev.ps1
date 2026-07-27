@@ -12,12 +12,18 @@ $services = @(
 
 foreach ($service in $services) {
     $pomPath = Join-Path $root $service.Pom
-    $command = "Set-Location '$root'; & '$mvnw' -f '$pomPath' spring-boot:run"
+    
+    $scriptBlock = @"
+        `$host.UI.RawUI.WindowTitle = '$($service.Name)';
+        Set-Location '$root';
+        Write-Host 'Iniciando $($service.Name)...' -ForegroundColor Cyan;
+        & '$mvnw' -f '$pomPath' spring-boot:run
+"@
 
     Start-Process -FilePath 'powershell.exe' `
-        -ArgumentList @('-NoExit', '-Command', $command) `
+        -ArgumentList @('-NoExit', '-Command', $scriptBlock) `
         -WorkingDirectory $root `
         -WindowStyle Maximized | Out-Null
 }
 
-Write-Host 'The two services have been launched in separate windows.'
+Write-Host 'The two services have been launched in separate windows.' -ForegroundColor Green
