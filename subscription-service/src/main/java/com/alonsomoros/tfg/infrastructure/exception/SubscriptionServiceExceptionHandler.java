@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.infrastructure.web;
+package com.alonsomoros.tfg.infrastructure.exception;
 
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
