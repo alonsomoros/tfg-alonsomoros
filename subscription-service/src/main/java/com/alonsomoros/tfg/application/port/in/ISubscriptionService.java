@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.domain.service;
+package com.alonsomoros.tfg.application.port.in;
 
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
