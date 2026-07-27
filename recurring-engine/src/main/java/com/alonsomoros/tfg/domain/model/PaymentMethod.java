@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentMandate {
+public class PaymentMethod {
     private Long id;
     private Long subscriptionId;
     private String provider;

@@ -2,15 +2,15 @@ package com.alonsomoros.tfg.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.alonsomoros.tfg.application.command.RegisterMandateCommand;
-import com.alonsomoros.tfg.domain.model.PaymentMandate;
-import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMandateEntity;
+import com.alonsomoros.tfg.application.command.RegisterPaymentMethodCommand;
+import com.alonsomoros.tfg.domain.model.PaymentMethod;
+import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMethodEntity;
 
 @Component
-public class PaymentMandateMapper {
+public class PaymentMethodMapper {
 
-    public PaymentMandate toDomain(RegisterMandateCommand command) {
-        return PaymentMandate.builder()
+    public PaymentMethod toDomain(RegisterPaymentMethodCommand command) {
+        return PaymentMethod.builder()
                 .subscriptionId(command.subscriptionId())
                 .provider(command.provider())
                 .token(command.token())
@@ -18,8 +18,8 @@ public class PaymentMandateMapper {
                 .build();
     }
 
-    public PaymentMandateEntity toEntity(PaymentMandate paymentMandate) {
-        return PaymentMandateEntity.builder()
+    public PaymentMethodEntity toEntity(PaymentMethod paymentMandate) {
+        return PaymentMethodEntity.builder()
                 .subscriptionId(paymentMandate.getSubscriptionId())
                 .provider(paymentMandate.getProvider())
                 .token(paymentMandate.getToken())
@@ -28,8 +28,8 @@ public class PaymentMandateMapper {
                 .build();
     }
 
-    public PaymentMandate toDomain(PaymentMandateEntity entity) {
-        return PaymentMandate.builder()
+    public PaymentMethod toDomain(PaymentMethodEntity entity) {
+        return PaymentMethod.builder()
                 .id(entity.getId())
                 .subscriptionId(entity.getSubscriptionId())
                 .provider(entity.getProvider())

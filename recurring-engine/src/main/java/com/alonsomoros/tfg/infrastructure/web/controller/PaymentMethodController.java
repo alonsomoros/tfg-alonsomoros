@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonsomoros.tfg.application.port.in.IPaymentMandateService;
+import com.alonsomoros.tfg.application.port.in.IPaymentMethodService;
 import com.alonsomoros.tfg.infrastructure.web.dto.request.PaymentMethodRequestDto;
-import com.alonsomoros.tfg.infrastructure.web.mapper.WebRecurringMapper;
+import com.alonsomoros.tfg.infrastructure.web.mapper.WebPaymentMethodMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/recurring")
 @RestController
 @AllArgsConstructor
-public class RecurringEngineController {
+public class PaymentMethodController {
 
-    private final IPaymentMandateService recurringEngineService;
-    private final WebRecurringMapper paymentMethodMapper;
+    private final IPaymentMethodService recurringEngineService;
+    private final WebPaymentMethodMapper paymentMethodMapper;
 
     @GetMapping("/health")
     public String health() {

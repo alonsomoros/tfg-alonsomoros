@@ -1,6 +1,6 @@
 package com.alonsomoros.tfg.application.command;
 
-public record RegisterMandateCommand(
+public record RegisterPaymentMethodCommand(
         Long subscriptionId,
         String provider,
         String token,

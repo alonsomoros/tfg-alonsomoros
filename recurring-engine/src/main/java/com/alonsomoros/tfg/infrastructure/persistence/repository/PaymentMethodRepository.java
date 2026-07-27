@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMandateEntity;
+import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMethodEntity;
 
 @Repository
-public interface PaymentMandateRepository extends JpaRepository<PaymentMandateEntity, Long> {
-    Optional<PaymentMandateEntity> findBySubscriptionId(Long subscriptionId);
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEntity, Long> {
+    Optional<PaymentMethodEntity> findBySubscriptionId(Long subscriptionId);
 
     @Query("SELECT COUNT(p) > 0 FROM PaymentMandateEntity p " +
             "WHERE p.subscriptionId = :subscriptionId " +

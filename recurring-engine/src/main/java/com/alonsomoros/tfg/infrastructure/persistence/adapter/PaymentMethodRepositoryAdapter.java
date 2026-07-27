@@ -2,10 +2,10 @@ package com.alonsomoros.tfg.infrastructure.persistence.adapter;
 
 import org.springframework.stereotype.Component;
 
-import com.alonsomoros.tfg.domain.model.PaymentMandate;
-import com.alonsomoros.tfg.domain.port.PaymentMandateRepositoryPort;
-import com.alonsomoros.tfg.infrastructure.mapper.PaymentMandateMapper;
-import com.alonsomoros.tfg.infrastructure.persistence.repository.PaymentMandateRepository;
+import com.alonsomoros.tfg.domain.model.PaymentMethod;
+import com.alonsomoros.tfg.domain.port.PaymentMethodRepositoryPort;
+import com.alonsomoros.tfg.infrastructure.mapper.PaymentMethodMapper;
+import com.alonsomoros.tfg.infrastructure.persistence.repository.PaymentMethodRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,20 +13,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PaymentMandateRepositoryAdapter implements PaymentMandateRepositoryPort {
+public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPort {
 
-    private final PaymentMandateRepository repository;
-    private final PaymentMandateMapper mapper;
+    private final PaymentMethodRepository repository;
+    private final PaymentMethodMapper mapper;
 
     @Override
-    public PaymentMandate save(PaymentMandate paymentMandate) {
+    public PaymentMethod save(PaymentMethod paymentMandate) {
         var entity = mapper.toEntity(paymentMandate);
         var savedEntity = repository.save(entity);
         return mapper.toDomain(savedEntity);
     }
 
     @Override
-    public PaymentMandate findById(Long id) {
+    public PaymentMethod findById(Long id) {
         var entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Payment mandate not found with ID: " + id));
         return mapper.toDomain(entity);
     }

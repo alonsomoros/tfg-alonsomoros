@@ -2,11 +2,11 @@ package com.alonsomoros.tfg.application.service;
 
 import org.springframework.stereotype.Service;
 
-import com.alonsomoros.tfg.application.command.RegisterMandateCommand;
-import com.alonsomoros.tfg.application.port.in.IPaymentMandateService;
-import com.alonsomoros.tfg.domain.model.PaymentMandate;
-import com.alonsomoros.tfg.domain.port.PaymentMandateRepositoryPort;
-import com.alonsomoros.tfg.infrastructure.mapper.PaymentMandateMapper;
+import com.alonsomoros.tfg.application.command.RegisterPaymentMethodCommand;
+import com.alonsomoros.tfg.application.port.in.IPaymentMethodService;
+import com.alonsomoros.tfg.domain.model.PaymentMethod;
+import com.alonsomoros.tfg.domain.port.PaymentMethodRepositoryPort;
+import com.alonsomoros.tfg.infrastructure.mapper.PaymentMethodMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PaymentMandateServiceImpl implements IPaymentMandateService {
+public class PaymentMethodServiceImpl implements IPaymentMethodService {
 
-    private final PaymentMandateRepositoryPort repositoryPort;
-    private final PaymentMandateMapper paymentMandateMapper;
+    private final PaymentMethodRepositoryPort repositoryPort;
+    private final PaymentMethodMapper paymentMandateMapper;
 
     @Override
-    public void registerPaymentMandate(RegisterMandateCommand command) {
+    public void registerPaymentMandate(RegisterPaymentMethodCommand command) {
         log.info("Saving mandate for subscription: {}", command.subscriptionId());
 
         if (repositoryPort.existsActiveBySubscriptionId(command.subscriptionId())) {
@@ -29,7 +29,7 @@ public class PaymentMandateServiceImpl implements IPaymentMandateService {
         }
 
         // 2. Crear el Dominio
-        PaymentMandate mandate = new PaymentMandate();
+        PaymentMethod mandate = new PaymentMethod();
         mandate.setSubscriptionId(command.subscriptionId());
         mandate.setProvider(command.provider());
         mandate.setToken(command.token());
