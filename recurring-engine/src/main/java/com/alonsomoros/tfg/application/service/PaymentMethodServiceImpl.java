@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.application.command.RegisterPaymentMethodCommand;
 import com.alonsomoros.tfg.application.port.in.IPaymentMethodService;
+import com.alonsomoros.tfg.domain.exception.PaymentMethodAlreadyExistsException;
 import com.alonsomoros.tfg.domain.model.PaymentMethod;
 import com.alonsomoros.tfg.domain.port.PaymentMethodRepositoryPort;
 
@@ -22,8 +23,7 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
         log.info("Saving [Payment Method] for subscription with ID: {}", command.subscriptionId());
 
         if (repositoryPort.existsActiveBySubscriptionId(command.subscriptionId())) {
-            log.warn("Already ACTIVE [Payment Method] for subscription with ID: {}", command.subscriptionId());
-            return;
+            throw new PaymentMethodAlreadyExistsException("Payment Method already exists | ID: " + command.subscriptionId());
         }
 
         PaymentMethod mandate = new PaymentMethod();

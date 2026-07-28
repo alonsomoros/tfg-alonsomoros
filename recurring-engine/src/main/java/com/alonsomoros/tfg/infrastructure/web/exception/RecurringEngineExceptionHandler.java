@@ -1,4 +1,4 @@
-package com.alonsomoros.tfg.infrastructure.exception;
+package com.alonsomoros.tfg.infrastructure.web.exception;
 
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
@@ -6,25 +6,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
-import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
+import com.alonsomoros.tfg.application.exception.PaymentMethodNotFoundException;
+import com.alonsomoros.tfg.domain.exception.PaymentMethodAlreadyExistsException;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class SubscriptionServiceExceptionHandler {
+public class RecurringEngineExceptionHandler {
 
-    @ExceptionHandler(SubscriptionNotFoundException.class)
-    public ResponseEntity<String> handleSubscriptionNotFound(SubscriptionNotFoundException e) {
-        log.warn("Subscription not found: {}", e.getMessage());
+    @ExceptionHandler(PaymentMethodNotFoundException.class)
+    public ResponseEntity<String> handlePaymentMethodNotFound(PaymentMethodNotFoundException e) {
+        log.warn("Payment method not found: {}", e.getMessage());
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(SubscriptionAlreadyOngoingException.class)
-    public ResponseEntity<String> handleSubscriptionAlreadyOngoing(SubscriptionAlreadyOngoingException e) {
-        log.warn("Subscription is already ongoing: {}", e.getMessage());
-        return ResponseEntity.status(409).body("Subscription is already ongoing");
+    @ExceptionHandler(PaymentMethodAlreadyExistsException.class)
+    public ResponseEntity<String> handlePaymentMethodAlreadyExists(PaymentMethodAlreadyExistsException e) {
+        log.warn("Payment method already exists: {}", e.getMessage());
+        return ResponseEntity.status(409).body("Payment method already exists");
     }
 
     @ExceptionHandler(DataAccessResourceFailureException.class)
