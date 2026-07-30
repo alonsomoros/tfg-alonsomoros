@@ -44,7 +44,7 @@ public class SubscriptionController {
         @ApiResponse(responseCode = "400", description = "Invalid request data"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping(EnpointConstants.CREATE_SUBSCRIPTION)
+    @PostMapping(EndpointConstants.CREATE_SUBSCRIPTION)
     public SubscriptionResponseDto createSubscription(@RequestBody SubscriptionRequestDto subscriptionRequestDto) {
         log.info("Received [SubscriptionRequest] | email: {}", subscriptionRequestDto.customerEmail());
         SubscriptionResponseDto response = subscriptionService.createSubscription(webSubscriptionMapper.toCommand(subscriptionRequestDto));
