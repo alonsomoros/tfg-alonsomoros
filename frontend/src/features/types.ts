@@ -12,3 +12,12 @@ export interface SubscriptionPayload {
     planId: string;
     paymentInfo: PaymentInfo;
 }
+
+export interface PlanResponse {
+    code: string;
+    name: string;
+    description: string;
+    amount: number;
+    currency: string;
+    billingInterval: string;
+}

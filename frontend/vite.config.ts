@@ -9,13 +9,18 @@ export default defineConfig({
       '/api/subscriptions': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api\/subscriptions/, '/subscriptions')
       },
       '/api/recurring': {
         target: 'http://localhost:8081',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
-      }
+      },
+      '/api/getPlans': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/getPlans/, '/plans/getPlans')
+      },
     }
   }
 })

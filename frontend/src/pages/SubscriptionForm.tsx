@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { createSubscription } from '../api/subscriptionServiceApi';
 import type { SubscriptionPayload } from '../features/types';
+import './SubscriptionForm.css';
 
 export function SubscriptionForm() {
     const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ export function SubscriptionForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -22,7 +23,7 @@ export function SubscriptionForm() {
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError('');
 
@@ -80,8 +81,8 @@ export function SubscriptionForm() {
         }
     }
 
-    return (
-        <main className="payment-page">
+        return (
+        <main className="payment-page app-page">
             <form className="payment-card" onSubmit={handleSubmit}>
                 <header className="payment-card__header">
                     <button className="payment-card__close" type="button" aria-label="Cerrar formulario">
