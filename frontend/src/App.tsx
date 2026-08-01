@@ -1,13 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css'
 import { PlansPage } from './pages/PlansPage'
-// import { DashboardPage } from './pages/DashboardPage'
-// import { SubscriptionForm } from './pages/SubscriptionForm'
+import { SubscriptionForm } from './pages/SubscriptionForm'
 
 function App() {
   return (
-    // <DashboardPage></DashboardPage>
-    // <SubscriptionForm></SubscriptionForm>
-    <PlansPage></PlansPage>
+    <Router>
+      <Routes>
+        <Route path="/" element={<PlansPage />} />
+        <Route path="/subscription-form" element={<SubscriptionForm />} />
+      </Routes>
+    </Router>
   )
 }
 

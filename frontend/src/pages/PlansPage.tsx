@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getPlans } from "../api/plansApi";
 import type { PlanResponse } from "../features/types";
 import "./PlansPage.css";
@@ -13,9 +14,16 @@ function formatBillingInterval(interval: string) {
 }
 
 export function PlansPage() {
+  const navigate = useNavigate();
   const [plans, setPlans] = useState<PlanResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+
+  const handleSelectPlan = (plan: PlanResponse) => {
+    localStorage.setItem('selectedPlan', JSON.stringify(plan));
+    navigate('/subscription-form');
+  };
 
   useEffect(() => {
     document.title = "Subscription Plans";
@@ -84,7 +92,9 @@ export function PlansPage() {
                   <strong>{plan.code}</strong>
                 </div>
 
-                <button className="plan-card__action" type="button">
+                <button className="plan-card__action" type="button" onClick={() => {
+                  handleSelectPlan(plan);
+                }}>
                   Select plan
                 </button>
               </article>
