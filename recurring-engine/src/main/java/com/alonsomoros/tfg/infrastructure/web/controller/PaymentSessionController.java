@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/recurring/setup-intent")
+@RequestMapping("/api/v1/payment-sessions")
 @RequiredArgsConstructor
 public class PaymentSessionController {
 

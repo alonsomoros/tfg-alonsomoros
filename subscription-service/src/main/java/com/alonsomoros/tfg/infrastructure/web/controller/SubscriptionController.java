@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/subscriptions")
+@RequestMapping("/api/v1/subscriptions")
 @RestController
 @Tag(name = "Subscription Controller", description = "Endpoints for subscription management")
 public class SubscriptionController {

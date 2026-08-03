@@ -2,8 +2,8 @@ import { httpClient } from './httpClient'
 
 export const checkSubscriptionServiceHealth = async () => {
     try {
-        // GET http://localhost:8080/subscriptions/health
-        const response = await httpClient.get('/subscriptions/health');
+        // GET http://localhost:8080/api/v1/subscriptions/health
+        const response = await httpClient.get('subscriptions/health');
         console.log('Subscription Service Health Check Response:', response.data);
         return response.data;
     } catch (error) {
@@ -13,8 +13,8 @@ export const checkSubscriptionServiceHealth = async () => {
 
 export const checkRecurringEngineHealth = async () => {
     try {
-        // GET http://localhost:8081/recurring-engine/health
-        const response = await httpClient.get('/recurring-engine/health');
+        // GET http://localhost:8081/api/v1/recurring-engine/health
+        const response = await httpClient.get('recurring-engine/health');
         console.log('Recurring Engine Health Check Response:', response.data);
         return response.data;
     } catch (error) {

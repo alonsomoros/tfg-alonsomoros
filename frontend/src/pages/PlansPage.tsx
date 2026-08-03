@@ -33,8 +33,6 @@ export function PlansPage() {
         setLoading(true);
         setError("");
         const response = await getPlans();
-        console.log("Lo que recibe React es:", response);
-        console.log("¿Es un array?", Array.isArray(response));
         setPlans(response);
       } catch (loadError) {
         setError("No se han podido cargar los planes disponibles.");

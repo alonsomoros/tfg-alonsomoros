@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/plans")
+@RequestMapping("/api/v1/plans")
 @RestController
 @Tag(name = "Plan Controller", description = "Endpoints for plan management")
 public class PlanController {

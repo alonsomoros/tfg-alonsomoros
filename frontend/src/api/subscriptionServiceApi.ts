@@ -3,8 +3,8 @@ import { httpClient } from './httpClient'
 
 export const createSubscription = async (payload: SubscriptionPayload) => {
     try {
-        // POST http://localhost:8080/subscriptions/subscribe
-        const response = await httpClient.post('/subscriptions/subscribe', payload);
+        // POST http://localhost:8080/api/v1/subscriptions/subscribe
+        const response = await httpClient.post('subscriptions/subscribe', payload);
         console.log('Subscription Response:', response.data);
         return response.data;
     } catch (error) {
@@ -22,6 +22,6 @@ export interface PlanResponse {
 }
 
 export const getPlans = async () => {
-  const response = await httpClient.get<PlanResponse[]>('/getPlans');
+  const response = await httpClient.get<PlanResponse[]>('plans/getPlans');
   return response.data;
 }

@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequestMapping("/recurring")
+@RequestMapping("/api/v1/payment-methods")
 @RestController
 @AllArgsConstructor
 public class PaymentMethodController {
