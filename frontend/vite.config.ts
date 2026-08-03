@@ -21,6 +21,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/getPlans/, '/plans/getPlans')
       },
+      '/api/recurring/setup-intent': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
     }
   }
 })
