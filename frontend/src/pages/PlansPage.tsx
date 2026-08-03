@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPlans } from "../api/plansApi";
+import { getPlans } from "../api/subscriptionServiceApi";
 import type { PlanResponse } from "../features/types";
 import "./PlansPage.css";
 
