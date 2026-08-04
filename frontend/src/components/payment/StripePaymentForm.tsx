@@ -72,7 +72,6 @@ export const StripePaymentForm: React.FC<StripeFormProps> = ({ onSuccess, disabl
             try {
                 const data = await createSetupIntent();
                 setClientSecret(data.clientSecret);
-                console.log("The secret passed to Stripe is exactly:", clientSecret);
             } catch (err) {
                 setConnectionError("Failed to connect to the secure payment gateway.");
             }
