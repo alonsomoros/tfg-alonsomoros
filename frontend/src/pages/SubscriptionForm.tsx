@@ -1,8 +1,9 @@
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { PlanResponse, SubscriptionPayload } from "../features/types";
 import { createSubscription } from '../api/subscriptionServiceApi';
-import { StripePaymentForm } from '../components/payment/StripePaymentForm';
+import { PayPalPaymentForm } from '../components/payment/PayPalPaymentForm';
+import { StripePaymentForm, } from '../components/payment/StripePaymentForm';
+import type { PlanResponse, SubscriptionPayload } from "../features/types";
 import './SubscriptionForm.css';
 
 export function SubscriptionForm() {
@@ -130,7 +131,6 @@ export function SubscriptionForm() {
                 <div style={{ marginTop: '20px' }}>
                     {paymentMethod === 'card' && (
                         <StripePaymentForm 
-                            // Le pasamos el callback y validamos que pueda enviar
                             onSuccess={(token) => handlePaymentSuccess('STRIPE', token)} 
                             disabled={!acceptTerms || !formData.email || isSubmitting}
                             isSubmitting={isSubmitting}
@@ -138,9 +138,11 @@ export function SubscriptionForm() {
                     )}
 
                     {paymentMethod === 'paypal' && (
-                        <div className="payment-placeholder">
-                            <p>You will be redirected to PayPal (Coming soon...)</p>
-                        </div>
+                        <PayPalPaymentForm
+                            onSuccess={(token) => handlePaymentSuccess('PAYPAL', token)}
+                            disabled={!acceptTerms || !formData.email || isSubmitting}
+                            isSubmitting={isSubmitting}
+                        />
                     )}
                 </div>
             </div>
