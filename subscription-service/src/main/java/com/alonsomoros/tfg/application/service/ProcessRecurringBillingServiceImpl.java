@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.alonsomoros.tfg.application.port.in.IProcessRecurringBilling;
-import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
+import com.alonsomoros.tfg.application.port.in.IProcessRecurringBillingService;
+// import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.model.Plan;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.port.PlanRepositoryPort;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProcessRecurringBilling implements IProcessRecurringBilling {
+public class ProcessRecurringBillingServiceImpl implements IProcessRecurringBillingService {
 
     private final SubscriptionRepositoryPort subscriptionRepository;
     private final PlanRepositoryPort planRepository;

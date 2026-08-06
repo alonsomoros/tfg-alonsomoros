@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonsomoros.tfg.application.port.in.IProcessRecurringBilling;
+import com.alonsomoros.tfg.application.port.in.IProcessRecurringBillingService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JobController {
 
-    private final IProcessRecurringBilling processRecurringBillingUseCase;
+    private final IProcessRecurringBillingService processRecurringBillingUseCase;
 
     @PostMapping(EndpointConstants.MANUAL_BILLING_TRIGGER)
     public ResponseEntity<String> triggerBillingManually() {

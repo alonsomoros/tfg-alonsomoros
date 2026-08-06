@@ -1,5 +1,5 @@
 package com.alonsomoros.tfg.application.port.in;
 
-public interface IProcessRecurringBilling {
+public interface IProcessRecurringBillingService {
     void execute();
 }

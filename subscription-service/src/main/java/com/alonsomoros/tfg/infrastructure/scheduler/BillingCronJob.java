@@ -3,7 +3,7 @@ package com.alonsomoros.tfg.infrastructure.scheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.alonsomoros.tfg.application.port.in.IProcessRecurringBilling;
+import com.alonsomoros.tfg.application.port.in.IProcessRecurringBillingService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BillingCronJob {
 
-    private final IProcessRecurringBilling processRecurringBillingUseCase;
+    private final IProcessRecurringBillingService processRecurringBillingUseCase;
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void runDailyBilling() {
