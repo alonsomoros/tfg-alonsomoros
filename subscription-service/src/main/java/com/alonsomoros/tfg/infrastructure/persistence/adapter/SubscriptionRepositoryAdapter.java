@@ -1,5 +1,6 @@
 package com.alonsomoros.tfg.infrastructure.persistence.adapter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -53,6 +54,14 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
                 SubscriptionStatusEnum.PENDING,
                 SubscriptionStatusEnum.ACTIVE);
         return subscriptionRepository.existsOngoingSubscription(email, planId, ongoingStatuses);
+    }
+
+    @Override
+    public List<Subscription> findSubscriptionsDueForBilling(LocalDate date) {
+        log.info("Finding subscriptions due for billing in BBDD | date: {}", date);
+        return subscriptionRepository.findSubscriptionsDueForBilling(date).stream()
+                .map(subscriptionEntityMapper::toDomain)
+                .toList();
     }
 
 }

@@ -6,6 +6,8 @@ import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +40,7 @@ public class SubscriptionEntity extends BaseEntity {
     @Column(name = "plan_id", nullable = false)
     private String planId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SubscriptionStatusEnum status;
 

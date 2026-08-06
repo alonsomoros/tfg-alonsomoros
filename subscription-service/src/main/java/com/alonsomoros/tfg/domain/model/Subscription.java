@@ -35,9 +35,17 @@ public class Subscription {
         this.status = SubscriptionStatusEnum.ACTIVE;
     }
 
+    public void markAsPastDue() {
+        this.status = SubscriptionStatusEnum.PAST_DUE;
+    }
+
     public void setNextPaymentDate(BillingInterval billingInterval) {
         if (billingInterval == null) {
             throw new RuntimeException("Cannot set nextPaymentDate without a billingInterval");
+        }
+
+        if (this.nextPaymentDate == null) {
+            this.nextPaymentDate = LocalDate.now();
         }
         
         switch (billingInterval) {
