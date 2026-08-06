@@ -35,4 +35,17 @@ public class Subscription {
         this.status = SubscriptionStatusEnum.ACTIVE;
     }
 
+    public void setNextPaymentDate(BillingInterval billingInterval) {
+        if (billingInterval == null) {
+            throw new RuntimeException("Cannot set nextPaymentDate without a billingInterval");
+        }
+        
+        switch (billingInterval) {
+            case WEEKLY -> this.nextPaymentDate = this.nextPaymentDate.plusWeeks(1);
+            case MONTHLY -> this.nextPaymentDate = this.nextPaymentDate.plusMonths(1);
+            case YEARLY -> this.nextPaymentDate = this.nextPaymentDate.plusYears(1);
+            default -> throw new IllegalArgumentException("Not supported billing interval: " + billingInterval);
+        };
+    }
+
 }
