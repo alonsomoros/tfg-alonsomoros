@@ -5,8 +5,9 @@ import org.springframework.stereotype.Component;
 import com.alonsomoros.tfg.application.command.PaymentDetailsCommand;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.infrastructure.client.feign.RecurringEngineFeignClient;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.PaymentInfoRequestDto;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.TokenRequestDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResponseDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentInfoRequestDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMandateRequestDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
     private final RecurringEngineFeignClient feignClient;
 
     @Override
-    public void sendPaymentToken(Long subscriptionId, PaymentDetailsCommand paymentDetails) {
+    public PaymentMandateResponseDto sendPaymentToken(Long subscriptionId, PaymentDetailsCommand paymentDetails) {
         log.info("Sending [Payment Method] to <<<Recurring Engine Component>>> | ID: {}", subscriptionId);
 
         PaymentInfoRequestDto feignDto = 
@@ -32,9 +33,9 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
                 paymentDetails.last4()
             );
 
-        TokenRequestDto request = new TokenRequestDto(subscriptionId, feignDto);
+        PaymentMandateRequestDto request = new PaymentMandateRequestDto(subscriptionId, feignDto);
 
-        feignClient.sendToken(request);
+        return feignClient.sendToken(request);
     }
 
 }

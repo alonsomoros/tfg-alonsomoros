@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alonsomoros.tfg.application.port.in.IPaymentMethodService;
 import com.alonsomoros.tfg.infrastructure.web.dto.request.PaymentMethodRequestDto;
+import com.alonsomoros.tfg.infrastructure.web.dto.response.PaymentMandateResponseDto;
 import com.alonsomoros.tfg.infrastructure.web.mapper.WebPaymentMethodMapper;
 
 import lombok.AllArgsConstructor;
@@ -30,11 +31,11 @@ public class PaymentMethodController {
     }
 
     @PostMapping("/tokens")
-    public ResponseEntity<Void> receiveToken(@RequestBody PaymentMethodRequestDto requestDto) {
+    public ResponseEntity<PaymentMandateResponseDto> receiveToken(@RequestBody PaymentMethodRequestDto requestDto) {
         log.info("Received [Payment Method Request] from <<<Subscription Service Component>>> | ID: {}", requestDto.subscriptionId());
-        recurringEngineService.registerPaymentMandate(paymentMethodMapper.toCommand(requestDto));
+        PaymentMandateResponseDto responseDto = recurringEngineService.registerPaymentMandate(paymentMethodMapper.toCommand(requestDto));
         log.info("Processed [Payment Method Request] successfully | ID: {}", requestDto.subscriptionId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(responseDto);
     }
     
 }

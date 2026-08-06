@@ -6,6 +6,7 @@ import com.alonsomoros.tfg.application.exception.PaymentMethodNotFoundException;
 import com.alonsomoros.tfg.domain.model.PaymentMethod;
 import com.alonsomoros.tfg.domain.port.PaymentMethodRepositoryPort;
 import com.alonsomoros.tfg.infrastructure.mapper.PaymentMethodMapper;
+import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMethodEntity;
 import com.alonsomoros.tfg.infrastructure.persistence.repository.PaymentMethodRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,15 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
     @Override
     public PaymentMethod save(PaymentMethod paymentMandate) {
         log.info("Saving payment method in BBDD | ID: {}", paymentMandate.getId());
-        var entity = mapper.toEntity(paymentMandate);
-        var savedEntity = repository.save(entity);
+        PaymentMethodEntity entity = mapper.toEntity(paymentMandate);
+        PaymentMethodEntity savedEntity = repository.save(entity);
         return mapper.toDomain(savedEntity);
     }
 
     @Override
     public PaymentMethod findById(Long id) {
         log.info("Finding payment method in BBDD | ID: {}", id);
-        var entity = repository.findById(id)
+        PaymentMethodEntity entity = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("Payment method not found with ID: " + id));
         return mapper.toDomain(entity);
     }

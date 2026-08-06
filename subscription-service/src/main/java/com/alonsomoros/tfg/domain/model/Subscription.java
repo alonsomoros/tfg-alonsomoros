@@ -17,6 +17,8 @@ public class Subscription {
 
     private Long id;
 
+    private Long externalPaymentMandateId;
+
     private String customerEmail;
 
     private String planId;
@@ -24,5 +26,13 @@ public class Subscription {
     private SubscriptionStatusEnum status;
 
     private LocalDate nextPaymentDate;
+
+    public void markAsActive(Long mandateId) {
+        if (mandateId == null) {
+            throw new RuntimeException("A subscription cannot be ACTIVE without a paymentMandateId");
+        }
+        this.externalPaymentMandateId = mandateId;
+        this.status = SubscriptionStatusEnum.ACTIVE;
+    }
 
 }

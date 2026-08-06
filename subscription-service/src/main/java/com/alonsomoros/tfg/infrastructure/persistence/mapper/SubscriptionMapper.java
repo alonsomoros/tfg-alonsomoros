@@ -26,6 +26,7 @@ public class SubscriptionMapper {
                 .status(subscription.getStatus())
                 .id(subscription.getId())
                 .nextPaymentDate(subscription.getNextPaymentDate())
+                .externalPaymentMandateId(subscription.getExternalPaymentMandateId())
                 .build();
     }
 
@@ -36,6 +37,7 @@ public class SubscriptionMapper {
                 .status(subscriptionEntity.getStatus())
                 .id(subscriptionEntity.getId())
                 .nextPaymentDate(subscriptionEntity.getNextPaymentDate())
+                .externalPaymentMandateId(subscriptionEntity.getExternalPaymentMandateId())
                 .build();
     }
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResponseDto;
 import com.alonsomoros.tfg.infrastructure.persistence.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
@@ -50,12 +51,11 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
         try {
             log.info("Calling <<<Recurring Engine Component>>> to save [PaymentMethod] | subscriptionId: {}", subscription.getId());
-            recurringEngineClient.sendPaymentToken(
+            PaymentMandateResponseDto paymentMandateResponse = recurringEngineClient.sendPaymentToken(
                 subscription.getId(), 
                 createSubscriptionCommand.paymentInfo()
             );
-
-            subscription.setStatus(SubscriptionStatusEnum.ACTIVE);
+            subscription.markAsActive(paymentMandateResponse.paymentMandateId());
             subscription = subscriptionRepository.save(subscription);
             log.info("Subscription ACTIVE saved in BBDD | subscriptionId: {}", subscription.getId());
         } catch (Exception e) {

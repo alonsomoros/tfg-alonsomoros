@@ -29,6 +29,9 @@ public class SubscriptionEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "external_payment_mandate_id", nullable = true)
+    private Long externalPaymentMandateId;
+
     @Column(name = "customer_email", nullable = false)
     private String customerEmail;
 
