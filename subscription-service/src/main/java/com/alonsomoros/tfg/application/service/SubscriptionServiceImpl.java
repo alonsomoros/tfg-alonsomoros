@@ -1,15 +1,21 @@
 package com.alonsomoros.tfg.application.service;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.infrastructure.persistence.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
+import com.alonsomoros.tfg.application.exception.PlanNotFoundException;
 import com.alonsomoros.tfg.application.port.in.ISubscriptionService;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
+import com.alonsomoros.tfg.domain.model.BillingInterval;
+import com.alonsomoros.tfg.domain.model.Plan;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
+import com.alonsomoros.tfg.domain.port.PlanRepositoryPort;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SubscriptionServiceImpl implements ISubscriptionService {
 
     private final SubscriptionRepositoryPort subscriptionRepository;
+    private final PlanRepositoryPort planRepository;
     private final SubscriptionMapper subscriptionMapper;
     private final RecurringEngineClientPort recurringEngineClient;
 
@@ -31,7 +38,12 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
             throw new SubscriptionAlreadyOngoingException("Subscription already ongoing | email: " + createSubscriptionCommand.customerEmail() + ", plan: " + createSubscriptionCommand.planId());
         }
 
+        Plan plan = planRepository.findByCode(createSubscriptionCommand.planId());
+        
+        LocalDate nextPaymentDate = calculateNextPaymentDate(plan.getBillingInterval());
+
         Subscription subscription = subscriptionMapper.toDomain(createSubscriptionCommand);
+        subscription.setNextPaymentDate(nextPaymentDate);
         subscription.setStatus(SubscriptionStatusEnum.PENDING);
         subscription = subscriptionRepository.save(subscription);
         log.debug("Subscription PENDING saved in BBDD | subscriptionId: {}", subscription.getId());
@@ -51,6 +63,17 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
         }
 
         return subscriptionMapper.toResponseDto(subscription);
+    }
+
+    private LocalDate calculateNextPaymentDate(BillingInterval interval) {
+        LocalDate today = LocalDate.now();
+        
+        return switch (interval) {
+            case WEEKLY -> today.plusWeeks(1);
+            case MONTHLY -> today.plusMonths(1);
+            case YEARLY -> today.plusYears(1);
+            default -> throw new IllegalArgumentException("Not supported billing interval: " + interval);
+        };
     }
     
 }

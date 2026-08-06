@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.domain.model;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +22,7 @@ public class Subscription {
     private String planId;
 
     private SubscriptionStatusEnum status;
+
+    private LocalDate nextPaymentDate;
 
 }

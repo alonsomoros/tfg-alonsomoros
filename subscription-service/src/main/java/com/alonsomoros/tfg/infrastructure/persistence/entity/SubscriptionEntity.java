@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.infrastructure.persistence.entity;
 
+import java.time.LocalDate;
+
 import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 
 import jakarta.persistence.Column;
@@ -35,5 +37,8 @@ public class SubscriptionEntity extends BaseEntity {
 
     @Column(nullable = false)
     private SubscriptionStatusEnum status;
+
+    @Column(name = "next_payment_date", nullable = false)
+    private LocalDate nextPaymentDate;
 
 }
