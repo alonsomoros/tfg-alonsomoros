@@ -56,4 +56,11 @@ public class Subscription {
         };
     }
 
+    public void setNextPaymentDate(LocalDate nextPaymentDate) {
+        if (nextPaymentDate == null) {
+            throw new RuntimeException("Cannot set nextPaymentDate to null");
+        }
+        this.nextPaymentDate = nextPaymentDate;
+    }
+
 }

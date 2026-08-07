@@ -1,8 +1,11 @@
 package com.alonsomoros.tfg.application.service;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
+import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
 import com.alonsomoros.tfg.application.port.in.ISubscriptionService;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
@@ -30,34 +33,47 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
     @Override
     public SubscriptionResponseDto createSubscription(CreateSubscriptionCommand createSubscriptionCommand) {
-        log.info("Creating new subscription | email: {}, plan: {}", createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId());
-        if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId())) {
-            throw new SubscriptionAlreadyOngoingException("Subscription already ongoing | email: " + createSubscriptionCommand.customerEmail() + ", plan: " + createSubscriptionCommand.planId());
+        log.info("Creating new subscription | email: {}, plan: {}", createSubscriptionCommand.customerEmail(),
+                createSubscriptionCommand.planId());
+        if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(),
+                createSubscriptionCommand.planId())) {
+            throw new SubscriptionAlreadyOngoingException("Subscription already ongoing | email: "
+                    + createSubscriptionCommand.customerEmail() + ", plan: " + createSubscriptionCommand.planId());
         }
 
         Subscription subscription = subscriptionMapper.toDomain(createSubscriptionCommand);
         subscription.setStatus(SubscriptionStatusEnum.PENDING);
-        
+
         Plan plan = planRepository.findByCode(createSubscriptionCommand.planId());
         subscription.setNextPaymentDate(plan.getBillingInterval());
-        
+
         subscription = subscriptionRepository.save(subscription);
         log.debug("Subscription PENDING saved in BBDD | subscriptionId: {}", subscription.getId());
 
         try {
-            log.info("Calling <<<Recurring Engine Component>>> to save [PaymentMethod] | subscriptionId: {}", subscription.getId());
+            log.info("Calling <<<Recurring Engine Component>>> to save [PaymentMethod] | subscriptionId: {}",
+                    subscription.getId());
             PaymentMandateResponseDto paymentMandateResponse = recurringEngineClient.sendPaymentToken(
-                subscription.getId(), 
-                createSubscriptionCommand.paymentInfo()
-            );
+                    subscription.getId(),
+                    createSubscriptionCommand.paymentInfo());
             subscription.markAsActive(paymentMandateResponse.paymentMandateId());
             subscription = subscriptionRepository.save(subscription);
             log.info("Subscription ACTIVE saved in BBDD | subscriptionId: {}", subscription.getId());
         } catch (Exception e) {
-            log.error("Error while calling <<<Recurring Engine Component>>> will remain PENDING | subscriptionId: {}", subscription.getId(), e);
+            log.error("Error while calling <<<Recurring Engine Component>>> will remain PENDING | subscriptionId: {}",
+                    subscription.getId(), e);
         }
 
         return subscriptionMapper.toResponseDto(subscription);
     }
-    
+
+    @Override
+    public void updatePaymentDate(Long subscriptionId, LocalDate newPaymentDate) {
+        log.info("Updating payment date of subscription {} to {}", subscriptionId, newPaymentDate);
+        Subscription subscription = subscriptionRepository.findById(subscriptionId);
+        subscription.setNextPaymentDate(newPaymentDate);
+        subscriptionRepository.save(subscription);
+        log.info("Payment date of subscription {} updated successfully to {}", subscriptionId, newPaymentDate);
+    }
+
 }
