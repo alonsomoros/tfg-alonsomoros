@@ -6,11 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.application.port.in.IProcessRecurringBillingService;
-// import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
+import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.model.Plan;
 import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.port.PlanRepositoryPort;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.ChargeRequestDto;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class ProcessRecurringBillingServiceImpl implements IProcessRecurringBill
 
     private final SubscriptionRepositoryPort subscriptionRepository;
     private final PlanRepositoryPort planRepository;
-    // private final RecurringEngineClientPort recurringEngineClient;
+    private final RecurringEngineClientPort recurringEngineClient;
 
     @Override
     @Transactional
@@ -40,12 +41,12 @@ public class ProcessRecurringBillingServiceImpl implements IProcessRecurringBill
                 Plan plan = planRepository.findByCode(subscription.getPlanId());
 
                 log.info("Calling <<<Recurring Engine Component>>> to charge subscription {} with mandate {} for plan {} with amount {}", subscription.getId(), subscription.getExternalPaymentMandateId(), plan.getCode(), plan.getAmount());
-                
-                // TODO: Llamar al 8081 para cobrar
-                // recurringEngineClient.chargeMandate(
-                //     subscription.getExternalPaymentMandateId(), 
-                //     plan.getAmount()
-                // );
+                ChargeRequestDto requestDto = new ChargeRequestDto(plan.getAmount());
+
+                recurringEngineClient.chargeMandate(
+                    subscription.getExternalPaymentMandateId(), 
+                    requestDto
+                );
 
                 subscription.setNextPaymentDate(plan.getBillingInterval());
                 subscriptionRepository.save(subscription);

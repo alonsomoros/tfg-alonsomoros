@@ -1,11 +1,15 @@
 package com.alonsomoros.tfg.infrastructure.client.adapter;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Component;
 
 import com.alonsomoros.tfg.application.command.PaymentDetailsCommand;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.infrastructure.client.feign.RecurringEngineFeignClient;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.ChargeMandateResponseDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResponseDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.ChargeRequestDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentInfoRequestDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMandateRequestDto;
 
@@ -36,6 +40,12 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
         PaymentMandateRequestDto request = new PaymentMandateRequestDto(subscriptionId, feignDto);
 
         return feignClient.sendToken(request);
+    }
+
+    @Override
+    public ChargeMandateResponseDto chargeMandate(Long externalPaymentMandateId, ChargeRequestDto requestamount) {
+        log.info("Charging [Payment Mandate] to <<<Recurring Engine Component>>> | Mandate ID: {}, Amount: {}", externalPaymentMandateId, requestamount);
+        return feignClient.chargeMandate(externalPaymentMandateId, requestamount);
     }
 
 }

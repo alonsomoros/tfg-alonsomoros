@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.alonsomoros.tfg.domain.port.out.PaymentGatewayPort;
 import com.stripe.Stripe;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class StripePaymentAdapter {
+public class StripePaymentAdapter implements PaymentGatewayPort {
 
     public StripePaymentAdapter(@Value("${stripe.api.key}") String apiKey) {
         Stripe.apiKey = apiKey;
@@ -48,13 +49,11 @@ public class StripePaymentAdapter {
         }
     }
 
+    @Override
     public void charge(String paymentMethodToken, BigDecimal amount) {
         try {
-            // A. Rescatamos la tarjeta de Stripe usando el Token (pm_...)
             PaymentMethod pm = PaymentMethod.retrieve(paymentMethodToken);
 
-            // B. Si la tarjeta NO tiene un cliente asociado (lo que ocurre con tu código
-            // actual)
             String customerId = pm.getCustomer();
             if (customerId == null) {
                 log.info("Payment Method without Customer, creating a new Customer in Stripe...");
@@ -64,25 +63,22 @@ public class StripePaymentAdapter {
 
                 customerId = customer.getId();
 
-                // Vinculamos la tarjeta a este nuevo cliente
                 pm.attach(PaymentMethodAttachParams.builder().setCustomer(customerId).build());
                 log.info("Payment Method linked successfully to Customer: {}", customerId);
             }
 
-            // C. Convertimos a céntimos (Stripe no usa decimales. 9.99€ = 999)
+            // Stripe no usa decimales -> Céntimos
             long amountInCents = amount.multiply(new BigDecimal("100")).longValue();
 
-            // D. Preparamos el hachazo final (El cobro Off-Session)
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                     .setAmount(amountInCents)
                     .setCurrency("eur")
                     .setPaymentMethod(paymentMethodToken)
-                    .setCustomer(customerId) // <-- ¡Ahora sí lo tenemos!
-                    .setConfirm(true) // Cóbralo YA
-                    .setOffSession(true) // Sin el usuario delante (salta el 3DSecure)
+                    .setCustomer(customerId)
+                    .setConfirm(true)
+                    .setOffSession(true)
                     .build();
 
-            // E. Ejecutamos el cobro
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
             if (!"succeeded".equals(paymentIntent.getStatus())) {
@@ -90,11 +86,17 @@ public class StripePaymentAdapter {
                 throw new RuntimeException("Stripe charge failed with status: " + paymentIntent.getStatus());
             }
 
-            log.info("¡Charged {} to Customer {} cents in Stripe!", amountInCents, customerId);
+            // Log en double
+            log.info("Charged {} cents to Customer: {} cents in Stripe", amountInCents, customerId);
 
         } catch (Exception e) {
             log.error("Critical error while charging in Stripe: {}", e.getMessage());
             throw new RuntimeException("Error executing recurring charge in Stripe", e);
         }
+    }
+
+    @Override
+    public String getProviderName() {
+        return "STRIPE";
     }
 }
