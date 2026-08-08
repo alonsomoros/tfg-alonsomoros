@@ -61,16 +61,17 @@ interface StripeFormProps {
     onSuccess: (token: string) => void;
     disabled: boolean;
     isSubmitting: boolean;
+    customerEmail: string;
 }
 
-export const StripePaymentForm: React.FC<StripeFormProps> = ({ onSuccess, disabled, isSubmitting }) => {
+export const StripePaymentForm: React.FC<StripeFormProps> = ({ onSuccess, disabled, isSubmitting, customerEmail }) => {
     const [clientSecret, setClientSecret] = useState("");
     const [connectionError, setConnectionError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchSecret = async () => {
             try {
-                const data = await createSetupIntent();
+                const data = await createSetupIntent(customerEmail);
                 setClientSecret(data.clientSecret);
             } catch (err) {
                 setConnectionError("Failed to connect to the secure payment gateway.");
@@ -78,7 +79,7 @@ export const StripePaymentForm: React.FC<StripeFormProps> = ({ onSuccess, disabl
         };
 
         fetchSecret();
-    }, []);
+    }, [customerEmail]);
 
     if (connectionError) {
         return <div style={{ color: 'red', padding: '20px', border: '1px solid red' }}>{connectionError}</div>;

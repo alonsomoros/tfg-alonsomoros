@@ -12,7 +12,7 @@ public class PaymentSessionServiceImpl {
 
     private final StripePaymentAdapter stripeAdapter;
 
-    public String getStripeClientSecret() {
-        return stripeAdapter.createSetupIntent();
+    public String getStripeClientSecret(String customerEmail) {
+        return stripeAdapter.createSetupIntent(customerEmail);
     }
 }

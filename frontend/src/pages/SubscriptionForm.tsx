@@ -10,6 +10,8 @@ export function SubscriptionForm() {
     const [plan, setPlan] = useState<PlanResponse | null>(null);
     const navigate = useNavigate();
 
+    const [step, setStep] = useState<1 | 2>(1);
+
     const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'others'>('card');
     const [acceptTerms, setAcceptTerms] = useState(false);
 
@@ -33,6 +35,15 @@ export function SubscriptionForm() {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
+
+    const handleNextStep = () => {
+        if (!formData.email || !formData.email.includes('@')) {
+            setError('Por favor, introduce un correo electrónico válido.');
+            return;
+        }
+        setError('');
+        setStep(2); // Avanzamos al pago
     };
 
     const handlePaymentSuccess = async (provider: string, token: string) => {
@@ -70,13 +81,12 @@ export function SubscriptionForm() {
         <main className="payment-page app-page">
             <div className="payment-card">
                 <header className="payment-card__header">
-                   <div className="payment-card__header-left">
-                        <button className="payment-card__close" type="button" aria-label="Cerrar formulario" onClick={() => navigate('/')}>
-                            X
-                        </button>
-                        <h1 className="payment-card__title">Details of the subscription</h1>
+                    <div className="payment-card__header-left">
+                        <button className="payment-card__close" type="button" onClick={() => navigate('/')}>X</button>
+                        <h1 className="payment-card__title">
+                            {step === 1 ? 'Tus Datos' : 'Método de Pago'}
+                        </h1>
                     </div>
-
                     <div className="payment-card__total">
                         <strong>{plan ? `${plan.amount.toFixed(2)} ${plan.currency}` : '0.00'}</strong>
                     </div>
@@ -84,67 +94,76 @@ export function SubscriptionForm() {
 
                 {error && <div style={{ color: 'red', marginBottom: '15px' }}>{error}</div>}
 
-                
-                <section className="payment-method-selector">
-                   <h2 className="payment-section-title">Payment Method:</h2>
-                    <div className="payment-methods">
-                        <div 
-                            className={`payment-method-btn ${paymentMethod === 'card' ? 'active' : ''}`}
-                            onClick={() => setPaymentMethod('card')}
+                {step === 1 && (
+                    <div className="payment-form">
+                        <label className="payment-field">
+                            <span>Correo Electrónico *</span>
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                        </label>
+                        <label className="payment-field">
+                            <span>Titular de la Tarjeta / Cuenta (Opcional)</span>
+                            <input type="text" name="cardHolder" value={formData.cardHolder} onChange={handleChange} />
+                        </label>
+
+                        <button 
+                            className="payment-card__submit" 
+                            style={{ marginTop: '20px' }}
+                            type="button" 
+                            onClick={handleNextStep}
                         >
-                            <span className="icon">💳</span>
-                            <span>Payment with card</span>
-                        </div>
-                        <div 
-                            className={`payment-method-btn ${paymentMethod === 'paypal' ? 'active' : ''}`}
-                            onClick={() => setPaymentMethod('paypal')}
-                        >
-                            <span className="icon">🅿️</span>
-                            <span>Payment with PayPal</span>
-                        </div>
-                        <div 
-                            className={`payment-method-btn ${paymentMethod === 'others' ? 'active' : ''}`}
-                            onClick={() => setPaymentMethod('others')}
-                        >
-                            <span className="icon">🌐</span>
-                            <span>Others</span>
-                        </div>
+                            Continuar al pago
+                        </button>
                     </div>
-                </section>
+                )}
 
-                <div className="payment-form">
-                    <label className="payment-field">
-                        <span>Email</span>
-                        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                    </label>
-                    <label className="payment-field">
-                        <span>Cardholder Name (Optional)</span>
-                        <input type="text" name="cardHolder" value={formData.cardHolder} onChange={handleChange} />
-                    </label>
+                {step === 2 && (
+                    <>
+                        <div style={{ marginBottom: '15px', fontSize: '0.9rem', color: '#666' }}>
+                            Comprando como: <strong>{formData.email}</strong> 
+                            <button 
+                                onClick={() => setStep(1)} 
+                                style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', marginLeft: '10px', textDecoration: 'underline' }}
+                            >
+                                Cambiar
+                            </button>
+                        </div>
 
-                    <label className="payment-terms" style={{ marginTop: '20px' }}>
-                        <input type="checkbox" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
-                        <span>I have read and accept the terms and conditions.</span>
-                    </label>
-                </div>
+                        <section className="payment-method-selector">
+                             <div className="payment-methods">
+                                <div className={`payment-method-btn ${paymentMethod === 'card' ? 'active' : ''}`} onClick={() => setPaymentMethod('card')}>
+                                    <span className="icon">💳</span><span>Tarjeta</span>
+                                </div>
+                                <div className={`payment-method-btn ${paymentMethod === 'paypal' ? 'active' : ''}`} onClick={() => setPaymentMethod('paypal')}>
+                                    <span className="icon">🅿️</span><span>PayPal</span>
+                                </div>
+                            </div>
+                        </section>
 
-                <div style={{ marginTop: '20px' }}>
-                    {paymentMethod === 'card' && (
-                        <StripePaymentForm 
-                            onSuccess={(token) => handlePaymentSuccess('STRIPE', token)} 
-                            disabled={!acceptTerms || !formData.email || isSubmitting}
-                            isSubmitting={isSubmitting}
-                        />
-                    )}
+                        <label className="payment-terms" style={{ marginTop: '20px', display: 'block' }}>
+                            <input type="checkbox" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
+                            <span> He leído y acepto los términos y condiciones.</span>
+                        </label>
 
-                    {paymentMethod === 'paypal' && (
-                        <PayPalPaymentForm
-                            onSuccess={(token) => handlePaymentSuccess('PAYPAL', token)}
-                            disabled={!acceptTerms || !formData.email || isSubmitting}
-                            isSubmitting={isSubmitting}
-                        />
-                    )}
-                </div>
+                        <div style={{ marginTop: '20px' }}>
+                            {paymentMethod === 'card' && (
+                                <StripePaymentForm 
+                                    customerEmail={formData.email}
+                                    onSuccess={(token) => handlePaymentSuccess('STRIPE', token)} 
+                                    disabled={!acceptTerms || isSubmitting}
+                                    isSubmitting={isSubmitting}
+                                />
+                            )}
+
+                            {paymentMethod === 'paypal' && (
+                                <PayPalPaymentForm 
+                                    onSuccess={(token) => handlePaymentSuccess('PAYPAL', token)} 
+                                    disabled={!acceptTerms || isSubmitting}
+                                    isSubmitting={isSubmitting}
+                                />
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
         </main>
     );
