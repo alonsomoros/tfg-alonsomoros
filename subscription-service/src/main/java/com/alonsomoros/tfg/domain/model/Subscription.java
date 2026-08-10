@@ -3,6 +3,9 @@ package com.alonsomoros.tfg.domain.model;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.alonsomoros.tfg.domain.exception.InvalidSubscriptionStateException;
+import com.alonsomoros.tfg.domain.exception.UnsupportedBillingIntervalException;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +33,7 @@ public class Subscription {
 
     public void markAsActive(UUID mandateId) {
         if (mandateId == null) {
-            throw new RuntimeException("A subscription cannot be ACTIVE without a paymentMandateId");
+            throw new InvalidSubscriptionStateException("A subscription cannot be ACTIVE without a paymentMandateId");
         }
         this.externalPaymentMandateId = mandateId;
         this.status = SubscriptionStatusEnum.ACTIVE;
@@ -42,7 +45,7 @@ public class Subscription {
 
     public void setNextPaymentDate(BillingInterval billingInterval) {
         if (billingInterval == null) {
-            throw new RuntimeException("Cannot set nextPaymentDate without a billingInterval");
+            throw new InvalidSubscriptionStateException("Cannot set nextPaymentDate without a billingInterval");
         }
 
         if (this.nextPaymentDate == null) {
@@ -53,13 +56,13 @@ public class Subscription {
             case WEEKLY -> this.nextPaymentDate = this.nextPaymentDate.plusWeeks(1);
             case MONTHLY -> this.nextPaymentDate = this.nextPaymentDate.plusMonths(1);
             case YEARLY -> this.nextPaymentDate = this.nextPaymentDate.plusYears(1);
-            default -> throw new IllegalArgumentException("Not supported billing interval: " + billingInterval);
+            default -> throw new UnsupportedBillingIntervalException(billingInterval.name());
         };
     }
 
     public void setNextPaymentDate(LocalDate nextPaymentDate) {
         if (nextPaymentDate == null) {
-            throw new RuntimeException("Cannot set nextPaymentDate to null");
+            throw new InvalidSubscriptionStateException("Cannot set nextPaymentDate to null");
         }
         this.nextPaymentDate = nextPaymentDate;
     }

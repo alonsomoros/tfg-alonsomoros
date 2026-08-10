@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
 import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
+import com.alonsomoros.tfg.domain.exception.InvalidSubscriptionStateException;
+import com.alonsomoros.tfg.domain.exception.UnsupportedBillingIntervalException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +27,18 @@ public class SubscriptionServiceExceptionHandler {
     public ResponseEntity<String> handleSubscriptionAlreadyOngoing(SubscriptionAlreadyOngoingException e) {
         log.warn("Subscription is already ongoing: {}", e.getMessage());
         return ResponseEntity.status(409).body("Subscription is already ongoing");
+    }
+
+    @ExceptionHandler(InvalidSubscriptionStateException.class)
+    public ResponseEntity<String> handleInvalidSubscriptionState(InvalidSubscriptionStateException e) {
+        log.warn("Invalid subscription state: {}", e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(UnsupportedBillingIntervalException.class)
+    public ResponseEntity<String> handleUnsupportedBillingInterval(UnsupportedBillingIntervalException e) {
+        log.error("Unsupported billing interval encountered: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unsupported billing interval");
     }
 
     @ExceptionHandler(DataAccessResourceFailureException.class)

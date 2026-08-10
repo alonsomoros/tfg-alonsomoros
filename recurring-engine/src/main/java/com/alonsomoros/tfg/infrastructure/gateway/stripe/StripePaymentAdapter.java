@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.alonsomoros.tfg.application.exception.PaymentGatewayException;
 import com.alonsomoros.tfg.domain.port.out.PaymentGatewayPort;
 import com.stripe.Stripe;
 import com.stripe.model.Customer;
@@ -45,7 +46,7 @@ public class StripePaymentAdapter implements PaymentGatewayPort {
 
             return setupIntent.getClientSecret();
         } catch (Exception e) {
-            throw new RuntimeException("Error while initializing Stripe setup intent", e);
+            throw new PaymentGatewayException("Error while initializing Stripe setup intent", e);
         }
     }
 
@@ -84,14 +85,14 @@ public class StripePaymentAdapter implements PaymentGatewayPort {
             if (!"succeeded".equals(paymentIntent.getStatus())) {
                 log.warn("Stripe charge returned non-success status | status: {}, customerId: {}, amountInCents: {}",
                         paymentIntent.getStatus(), customerId, amountInCents);
-                throw new RuntimeException("Stripe charge failed with status: " + paymentIntent.getStatus());
+                throw new PaymentGatewayException("Stripe charge failed with status: " + paymentIntent.getStatus());
             }
 
             log.info("Processed [StripeCharge] successfully | customerId: {}, amountInCents: {}", customerId, amountInCents);
 
         } catch (Exception e) {
             log.error("Stripe adapter failed to execute recurring charge", e);
-            throw new RuntimeException("Error executing recurring charge in Stripe", e);
+            throw new PaymentGatewayException("Error executing recurring charge in Stripe", e);
         }
     }
 

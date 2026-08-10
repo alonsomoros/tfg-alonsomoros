@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.alonsomoros.tfg.application.exception.PaymentGatewayException;
 import com.alonsomoros.tfg.application.exception.PaymentMethodNotFoundException;
+import com.alonsomoros.tfg.application.exception.UnsupportedPaymentProviderException;
 import com.alonsomoros.tfg.domain.exception.PaymentMethodAlreadyExistsException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,18 @@ public class RecurringEngineExceptionHandler {
     public ResponseEntity<String> handlePaymentMethodAlreadyExists(PaymentMethodAlreadyExistsException e) {
         log.warn("Payment method already exists: {}", e.getMessage());
         return ResponseEntity.status(409).body("Payment method already exists");
+    }
+
+    @ExceptionHandler(UnsupportedPaymentProviderException.class)
+    public ResponseEntity<String> handleUnsupportedPaymentProvider(UnsupportedPaymentProviderException e) {
+        log.warn("Unsupported payment provider requested: {}", e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(PaymentGatewayException.class)
+    public ResponseEntity<String> handlePaymentGatewayError(PaymentGatewayException e) {
+        log.error("Payment gateway error: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Payment gateway error occurred");
     }
 
     @ExceptionHandler(DataAccessResourceFailureException.class)

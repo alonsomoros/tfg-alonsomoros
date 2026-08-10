@@ -2,6 +2,7 @@ package com.alonsomoros.tfg.application.factory;
 
 import org.springframework.stereotype.Component;
 
+import com.alonsomoros.tfg.application.exception.UnsupportedPaymentProviderException;
 import com.alonsomoros.tfg.domain.port.out.PaymentGatewayPort;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class PaymentGatewayFactory {
     public PaymentGatewayPort getGateway(String providerName) {
         PaymentGatewayPort gateway = gateways.get(providerName.toUpperCase());
         if (gateway == null) {
-            throw new IllegalArgumentException("Provider not supported: " + providerName);
+            throw new UnsupportedPaymentProviderException(providerName);
         }
         return gateway;
     }

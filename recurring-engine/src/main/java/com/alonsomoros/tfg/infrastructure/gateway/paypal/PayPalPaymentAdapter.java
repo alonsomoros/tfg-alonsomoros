@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.alonsomoros.tfg.application.exception.PaymentGatewayException;
 import com.alonsomoros.tfg.domain.port.out.PaymentGatewayPort;
 
 import java.math.BigDecimal;
@@ -48,7 +49,7 @@ public class PayPalPaymentAdapter implements PaymentGatewayPort {
                 return;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException("Simulated Error with Paypal", e);
+              throw new PaymentGatewayException("Interrupted while processing simulated PayPal charge", e);
             }
         }
 
@@ -90,12 +91,12 @@ public class PayPalPaymentAdapter implements PaymentGatewayPort {
             } else {
                 log.error("PayPal charge failed | httpStatus: {}, responseBody: {}", response.statusCode(),
                         response.body());
-                throw new RuntimeException("Error in off-session payment for PayPal: " + response.body());
+              throw new PaymentGatewayException("PayPal charge failed with HTTP status " + response.statusCode());
             }
 
         } catch (Exception e) {
             log.error("PayPal adapter communication failure", e);
-            throw new RuntimeException("Failure in PayPal adapter", e);
+            throw new PaymentGatewayException("Failure in PayPal adapter", e);
         }
     }
 
