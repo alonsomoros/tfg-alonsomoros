@@ -1,5 +1,6 @@
 package com.alonsomoros.tfg.infrastructure.persistence.repository;
 
+import java.util.UUID;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,12 +11,12 @@ import org.springframework.stereotype.Repository;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.PaymentMethodEntity;
 
 @Repository
-public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEntity, Long> {
-    Optional<PaymentMethodEntity> findBySubscriptionId(Long subscriptionId);
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEntity, UUID> {
+    Optional<PaymentMethodEntity> findBySubscriptionId(UUID subscriptionId);
 
     @Query("SELECT COUNT(p) > 0 FROM PaymentMethodEntity p " +
             "WHERE p.subscriptionId = :subscriptionId " +
             "AND p.active = true")
-    boolean existsActiveBySubscriptionId(@Param("subscriptionId") Long subscriptionId);
+    boolean existsActiveBySubscriptionId(@Param("subscriptionId") UUID subscriptionId);
 }
 

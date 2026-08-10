@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.infrastructure.web.controller;
 
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +26,7 @@ public class BillingController {
 
     @PostMapping("/charge/{mandateId}")
     public ResponseEntity<ChargeMandateResponseDto> chargeMandate(
-            @PathVariable Long mandateId,
+            @PathVariable UUID mandateId,
             @RequestBody ChargeRequestDto request) {
             
         log.info("Received charge request for mandate: {} with amount: {}", mandateId, request.amount());

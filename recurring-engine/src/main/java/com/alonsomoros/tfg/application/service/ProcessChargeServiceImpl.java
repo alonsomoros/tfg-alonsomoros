@@ -1,6 +1,7 @@
 package com.alonsomoros.tfg.application.service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class ProcessChargeServiceImpl implements IProcessChargeService {
     private final PaymentGatewayFactory gatewayFactory;
 
     @Override
-    public void executeCharge(Long mandateId, BigDecimal amount) {
+    public void executeCharge(UUID mandateId, BigDecimal amount) {
         PaymentMethod mandate = paymentMethodRepository.findById(mandateId);
 
         PaymentGatewayPort paymentGateway = gatewayFactory.getGateway(mandate.getProvider());

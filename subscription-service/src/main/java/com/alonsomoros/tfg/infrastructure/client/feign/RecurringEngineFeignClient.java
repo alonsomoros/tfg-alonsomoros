@@ -1,6 +1,6 @@
 package com.alonsomoros.tfg.infrastructure.client.feign;
 
-import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +20,6 @@ public interface RecurringEngineFeignClient {
     PaymentMandateResponseDto sendToken(@RequestBody PaymentMandateRequestDto request);
 
     @PostMapping("/billing/charge/{mandateId}")
-    ChargeMandateResponseDto chargeMandate(@PathVariable("mandateId") Long externalPaymentMandateId, @RequestBody ChargeRequestDto requestDto);
+    ChargeMandateResponseDto chargeMandate(@PathVariable("mandateId") UUID externalPaymentMandateId, @RequestBody ChargeRequestDto requestDto);
 
 }

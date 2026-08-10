@@ -2,6 +2,7 @@ package com.alonsomoros.tfg.infrastructure.persistence.adapter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
     }
 
     @Override
-    public Subscription findById(Long id) {
+    public Subscription findById(UUID id) {
         log.info("Finding subscription in BBDD | ID: {}", id);
         SubscriptionEntity subscriptionEntity = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new SubscriptionNotFoundException("Subscription not found in BBDD | ID: " + id));
@@ -42,7 +43,7 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.info("Deleting subscription in BBDD | ID: {}", id);
         subscriptionRepository.deleteById(id);
     }

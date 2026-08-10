@@ -1,6 +1,6 @@
 package com.alonsomoros.tfg.infrastructure.client.adapter;
 
-import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
     private final RecurringEngineFeignClient feignClient;
 
     @Override
-    public PaymentMandateResponseDto sendPaymentToken(Long subscriptionId, PaymentDetailsCommand paymentDetails) {
+    public PaymentMandateResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentDetails) {
         log.info("Sending [Payment Method] to <<<Recurring Engine Component>>> | ID: {}", subscriptionId);
 
         PaymentInfoRequestDto feignDto = 
@@ -43,7 +43,7 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
     }
 
     @Override
-    public ChargeMandateResponseDto chargeMandate(Long externalPaymentMandateId, ChargeRequestDto requestamount) {
+    public ChargeMandateResponseDto chargeMandate(UUID externalPaymentMandateId, ChargeRequestDto requestamount) {
         log.info("Charging [Payment Mandate] to <<<Recurring Engine Component>>> | Mandate ID: {}, Amount: {}", externalPaymentMandateId, requestamount);
         return feignClient.chargeMandate(externalPaymentMandateId, requestamount);
     }

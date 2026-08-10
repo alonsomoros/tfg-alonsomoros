@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.infrastructure.persistence.adapter;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import com.alonsomoros.tfg.application.exception.PaymentMethodNotFoundException;
@@ -29,7 +31,7 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
     }
 
     @Override
-    public PaymentMethod findById(Long id) {
+    public PaymentMethod findById(UUID id) {
         log.info("Finding payment method in BBDD | ID: {}", id);
         PaymentMethodEntity entity = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("Payment method not found with ID: " + id));
@@ -37,13 +39,13 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.info("Deleting payment method in BBDD | ID: {}", id);
         repository.deleteById(id);
     }
 
     @Override
-    public boolean existsActiveBySubscriptionId(Long subscriptionId) {
+    public boolean existsActiveBySubscriptionId(UUID subscriptionId) {
         log.info("Checking for active payment method in BBDD | Subscription ID: {}", subscriptionId);
         return repository.existsActiveBySubscriptionId(subscriptionId);
     }

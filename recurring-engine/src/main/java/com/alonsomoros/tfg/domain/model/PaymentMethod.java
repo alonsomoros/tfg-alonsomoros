@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.domain.model;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,8 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class PaymentMethod {
-    private Long id;
-    private Long subscriptionId;
+    private UUID id;
+    private UUID subscriptionId;
     private String provider;
     private String token;
     private String last4;

@@ -1,6 +1,6 @@
 package com.alonsomoros.tfg.application.port.out;
 
-import java.math.BigDecimal;
+import java.util.UUID;
 
 import com.alonsomoros.tfg.application.command.PaymentDetailsCommand;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.ChargeMandateResponseDto;
@@ -8,7 +8,7 @@ import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResp
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.ChargeRequestDto;
 
 public interface RecurringEngineClientPort {
-    PaymentMandateResponseDto sendPaymentToken(Long subscriptionId, PaymentDetailsCommand paymentInfoCommand);
+    PaymentMandateResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentInfoCommand);
 
-    ChargeMandateResponseDto chargeMandate(Long externalPaymentMandateId, ChargeRequestDto requestDto);
+    ChargeMandateResponseDto chargeMandate(UUID externalPaymentMandateId, ChargeRequestDto requestDto);
 }

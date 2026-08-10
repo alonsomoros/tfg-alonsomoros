@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.infrastructure.persistence.entity;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,11 +24,11 @@ import lombok.Setter;
 public class PaymentMethodEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
-    private Long subscriptionId;
+    private UUID subscriptionId;
 
     @Column(nullable = false)
     private String provider;

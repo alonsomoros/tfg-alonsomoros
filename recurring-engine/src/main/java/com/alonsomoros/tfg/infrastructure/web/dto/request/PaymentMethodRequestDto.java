@@ -1,14 +1,17 @@
 package com.alonsomoros.tfg.infrastructure.web.dto.request;
 
+import java.util.UUID;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record PaymentMethodRequestDto(
 
-    @NotBlank 
-    @Schema(example = "2026") 
-    Long subscriptionId,
+    @NotNull
+    @Schema(example = "c3f09cb2-bf6a-4f82-8f8f-508041f83dc3")
+    UUID subscriptionId,
 
     @NotBlank
     PaymentInfoDto paymentInfo

@@ -1,6 +1,7 @@
 package com.alonsomoros.tfg.domain.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,9 @@ import lombok.Setter;
 @Builder
 public class Subscription {
 
-    private Long id;
+    private UUID id;
 
-    private Long externalPaymentMandateId;
+    private UUID externalPaymentMandateId;
 
     private String customerEmail;
 
@@ -27,7 +28,7 @@ public class Subscription {
 
     private LocalDate nextPaymentDate;
 
-    public void markAsActive(Long mandateId) {
+    public void markAsActive(UUID mandateId) {
         if (mandateId == null) {
             throw new RuntimeException("A subscription cannot be ACTIVE without a paymentMandateId");
         }

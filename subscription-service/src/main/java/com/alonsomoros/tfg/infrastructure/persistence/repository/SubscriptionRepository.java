@@ -3,6 +3,7 @@ package com.alonsomoros.tfg.infrastructure.persistence.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 import com.alonsomoros.tfg.infrastructure.persistence.entity.SubscriptionEntity;
 
 @Repository
-public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
+public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, UUID> {
 
         Optional<SubscriptionEntity> findByCustomerEmail(String email);
 

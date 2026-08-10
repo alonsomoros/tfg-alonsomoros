@@ -1,5 +1,7 @@
 package com.alonsomoros.tfg.infrastructure.web.controller;
 
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +65,7 @@ public class SubscriptionController {
     })
     @PatchMapping("/{subscriptionId}")
     public String updatePaymentDate(
-            @PathVariable("subscriptionId") Long subscriptionId,
+            @PathVariable("subscriptionId") UUID subscriptionId,
             @RequestBody UpdatePaymentDateRequestDto requestDto) {
         log.info("Request to update payment date of subscription {} to {}", subscriptionId, requestDto.newPaymentDate());
         subscriptionService.updatePaymentDate(subscriptionId, requestDto.newPaymentDate());

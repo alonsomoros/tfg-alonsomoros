@@ -1,11 +1,11 @@
 package com.alonsomoros.tfg.application.service;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand;
-import com.alonsomoros.tfg.application.exception.SubscriptionNotFoundException;
 import com.alonsomoros.tfg.application.port.in.ISubscriptionService;
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.exception.SubscriptionAlreadyOngoingException;
@@ -68,7 +68,7 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
     }
 
     @Override
-    public void updatePaymentDate(Long subscriptionId, LocalDate newPaymentDate) {
+    public void updatePaymentDate(UUID subscriptionId, LocalDate newPaymentDate) {
         log.info("Updating payment date of subscription {} to {}", subscriptionId, newPaymentDate);
         Subscription subscription = subscriptionRepository.findById(subscriptionId);
         subscription.setNextPaymentDate(newPaymentDate);

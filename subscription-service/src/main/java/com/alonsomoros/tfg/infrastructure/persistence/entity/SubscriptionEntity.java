@@ -1,6 +1,7 @@
 package com.alonsomoros.tfg.infrastructure.persistence.entity;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 
@@ -28,11 +29,11 @@ import lombok.Setter;
 public class SubscriptionEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "external_payment_mandate_id", nullable = true)
-    private Long externalPaymentMandateId;
+    private UUID externalPaymentMandateId;
 
     @Column(name = "customer_email", nullable = false)
     private String customerEmail;

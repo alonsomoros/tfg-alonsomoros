@@ -1,13 +1,15 @@
 package com.alonsomoros.tfg.domain.port;
 
+import java.util.UUID;
+
 import com.alonsomoros.tfg.domain.model.PaymentMethod;
 
 public interface PaymentMethodRepositoryPort {
     PaymentMethod save(PaymentMethod paymentMandate);
 
-    PaymentMethod findById(Long id);
+    PaymentMethod findById(UUID id);
 
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
-    boolean existsActiveBySubscriptionId(Long subscriptionId);
+    boolean existsActiveBySubscriptionId(UUID subscriptionId);
 }
