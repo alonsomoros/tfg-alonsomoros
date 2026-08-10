@@ -23,9 +23,9 @@ public class PlanServiceImpl implements IPlanService {
 
     @Override
     public List<PlanResponseDto> getPlans() {
-        log.info("Retrieving all active plans from the BBDD.");
+        log.info("Retrieving active [Plan] list from DB.");
         List<Plan> plans = planRepository.findAllActivePlans();
-        log.info("Retrieved {} active plans.", plans.size());
+        log.info("Retrieved active [Plan] list successfully | count: {}", plans.size());
         return webPlanMapper.toResponseDto(plans);
     }
     

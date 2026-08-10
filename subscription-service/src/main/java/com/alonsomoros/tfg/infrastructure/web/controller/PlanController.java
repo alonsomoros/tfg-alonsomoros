@@ -38,9 +38,9 @@ public class PlanController {
     })
     @GetMapping(EndpointConstants.GET_PLANS)
     public List<PlanResponseDto> getPlans() {
-        log.info("Received request to get all plans.");
+        log.info("Received [GetPlansRequest] from <<<Frontend>>>.");
         List<PlanResponseDto> response = planService.getPlans();
-        log.info("Plans retrieved successfully.");
+        log.info("Processed [GetPlansRequest] successfully | planCount: {}", response.size());
         return response;
     }
 }

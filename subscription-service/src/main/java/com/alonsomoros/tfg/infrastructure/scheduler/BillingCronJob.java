@@ -17,7 +17,8 @@ public class BillingCronJob {
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void runDailyBilling() {
-        log.info("CRON TRIGGERED: Running daily billing process...");
+        log.info("Triggered [BillingCronJob] | schedule: 0 0 2 * * ?");
         processRecurringBillingUseCase.execute();
+        log.info("Completed [BillingCronJob] execution.");
     }
 }

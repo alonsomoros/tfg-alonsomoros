@@ -33,10 +33,12 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
     @Override
     public SubscriptionResponseDto createSubscription(CreateSubscriptionCommand createSubscriptionCommand) {
-        log.info("Creating new subscription | email: {}, plan: {}", createSubscriptionCommand.customerEmail(),
-                createSubscriptionCommand.planId());
+        log.info("Processing [SubscriptionRequest] from <<<Frontend>>> | customerEmail: {}, planCode: {}",
+            createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId());
         if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(),
                 createSubscriptionCommand.planId())) {
+            log.warn("Rejected [SubscriptionRequest] because an ongoing subscription already exists | customerEmail: {}, planCode: {}",
+                createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId());
             throw new SubscriptionAlreadyOngoingException("Subscription already ongoing | email: "
                     + createSubscriptionCommand.customerEmail() + ", plan: " + createSubscriptionCommand.planId());
         }
@@ -48,32 +50,38 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
         subscription.setNextPaymentDate(plan.getBillingInterval());
 
         subscription = subscriptionRepository.save(subscription);
-        log.debug("Subscription PENDING saved in BBDD | subscriptionId: {}", subscription.getId());
+    log.info("Saved [Subscription] with PENDING status | subscriptionId: {}, customerEmail: {}",
+        subscription.getId(), subscription.getCustomerEmail());
 
         try {
-            log.info("Calling <<<Recurring Engine Component>>> to save [PaymentMethod] | subscriptionId: {}",
+        log.info("Sending [PaymentMethodRequest] to <<<Recurring Engine>>> | subscriptionId: {}",
                     subscription.getId());
             PaymentMandateResponseDto paymentMandateResponse = recurringEngineClient.sendPaymentToken(
                     subscription.getId(),
                     createSubscriptionCommand.paymentInfo());
             subscription.markAsActive(paymentMandateResponse.paymentMandateId());
             subscription = subscriptionRepository.save(subscription);
-            log.info("Subscription ACTIVE saved in BBDD | subscriptionId: {}", subscription.getId());
+        log.info("Activated [Subscription] successfully | subscriptionId: {}, paymentMandateId: {}",
+            subscription.getId(), paymentMandateResponse.paymentMandateId());
         } catch (Exception e) {
-            log.error("Error while calling <<<Recurring Engine Component>>> will remain PENDING | subscriptionId: {}",
-                    subscription.getId(), e);
+        log.warn("Recurring Engine call failed; subscription remains PENDING | subscriptionId: {}",
+            subscription.getId(), e);
         }
 
+    log.info("Processed [SubscriptionRequest] successfully | customerEmail: {}, subscriptionId: {}",
+        subscription.getCustomerEmail(), subscription.getId());
         return subscriptionMapper.toResponseDto(subscription);
     }
 
     @Override
     public void updatePaymentDate(UUID subscriptionId, LocalDate newPaymentDate) {
-        log.info("Updating payment date of subscription {} to {}", subscriptionId, newPaymentDate);
+    log.info("Processing [UpdatePaymentDateRequest] | subscriptionId: {}, newPaymentDate: {}",
+        subscriptionId, newPaymentDate);
         Subscription subscription = subscriptionRepository.findById(subscriptionId);
         subscription.setNextPaymentDate(newPaymentDate);
         subscriptionRepository.save(subscription);
-        log.info("Payment date of subscription {} updated successfully to {}", subscriptionId, newPaymentDate);
+    log.info("Processed [UpdatePaymentDateRequest] successfully | subscriptionId: {}, nextPaymentDate: {}",
+        subscriptionId, newPaymentDate);
     }
 
 }

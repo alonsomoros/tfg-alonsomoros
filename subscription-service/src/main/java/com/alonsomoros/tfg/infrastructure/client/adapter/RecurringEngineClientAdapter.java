@@ -25,7 +25,8 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
 
     @Override
     public PaymentMandateResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentDetails) {
-        log.info("Sending [Payment Method] to <<<Recurring Engine Component>>> | ID: {}", subscriptionId);
+        log.info("Sending [PaymentMethodRequest] to <<<Recurring Engine>>> | subscriptionId: {}, provider: {}",
+            subscriptionId, paymentDetails.provider());
 
         PaymentInfoRequestDto feignDto = 
             new PaymentInfoRequestDto(
@@ -38,14 +39,20 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
             );
 
         PaymentMandateRequestDto request = new PaymentMandateRequestDto(subscriptionId, feignDto);
-
-        return feignClient.sendToken(request);
+    PaymentMandateResponseDto response = feignClient.sendToken(request);
+    log.info("Received [PaymentMethodResponse] from <<<Recurring Engine>>> | subscriptionId: {}, paymentMandateId: {}",
+        subscriptionId, response.paymentMandateId());
+    return response;
     }
 
     @Override
-    public ChargeMandateResponseDto chargeMandate(UUID externalPaymentMandateId, ChargeRequestDto requestamount) {
-        log.info("Charging [Payment Mandate] to <<<Recurring Engine Component>>> | Mandate ID: {}, Amount: {}", externalPaymentMandateId, requestamount);
-        return feignClient.chargeMandate(externalPaymentMandateId, requestamount);
+    public ChargeMandateResponseDto chargeMandate(UUID externalPaymentMandateId, ChargeRequestDto requestAmount) {
+    log.info("Sending [ChargeRequest] to <<<Recurring Engine>>> | paymentMandateId: {}, amount: {}",
+        externalPaymentMandateId, requestAmount.amount());
+    ChargeMandateResponseDto response = feignClient.chargeMandate(externalPaymentMandateId, requestAmount);
+    log.info("Received [ChargeResponse] from <<<Recurring Engine>>> | paymentMandateId: {}, message: {}",
+        externalPaymentMandateId, response.message());
+    return response;
     }
 
 }

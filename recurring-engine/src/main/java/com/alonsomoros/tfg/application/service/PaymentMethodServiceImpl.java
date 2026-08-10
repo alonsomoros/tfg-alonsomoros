@@ -21,10 +21,16 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
 
     @Override
     public PaymentMandateResponseDto registerPaymentMandate(RegisterPaymentMethodCommand command) {
-        log.info("Saving [Payment Method] for subscription with ID: {}", command.subscriptionId());
+        log.info(
+                "Processing [PaymentMethod] registration from <<<Subscription Service>>> | subscriptionId: {}, provider: {}",
+                command.subscriptionId(), command.provider());
 
         if (repositoryPort.existsActiveBySubscriptionId(command.subscriptionId())) {
-            throw new PaymentMethodAlreadyExistsException("Payment Method already exists | ID: " + command.subscriptionId());
+            log.warn(
+                    "Rejected [PaymentMethod] registration because an active mandate already exists | subscriptionId: {}",
+                    command.subscriptionId());
+            throw new PaymentMethodAlreadyExistsException(
+                    "Payment Method already exists | ID: " + command.subscriptionId());
         }
 
         PaymentMethod mandate = new PaymentMethod();
@@ -35,7 +41,9 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
         mandate.setActive(true);
 
         PaymentMethod savedMandate = repositoryPort.save(mandate);
+        log.info("Registered [PaymentMethod] successfully | paymentMandateId: {}, subscriptionId: {}, provider: {}",
+                savedMandate.getId(), savedMandate.getSubscriptionId(), savedMandate.getProvider());
         return new PaymentMandateResponseDto(savedMandate.getId());
     }
-    
+
 }

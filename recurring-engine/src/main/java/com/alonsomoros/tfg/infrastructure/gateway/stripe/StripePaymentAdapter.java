@@ -56,7 +56,7 @@ public class StripePaymentAdapter implements PaymentGatewayPort {
 
             String customerId = pm.getCustomer();
             if (customerId == null) {
-                log.info("Payment Method without Customer, creating a new Customer in Stripe...");
+                log.debug("PaymentMethod has no linked customer in Stripe; creating customer for off-session billing.");
                 Customer customer = Customer.create(CustomerCreateParams.builder()
                         .setDescription("TFG Customer " + System.currentTimeMillis())
                         .build());
@@ -64,7 +64,7 @@ public class StripePaymentAdapter implements PaymentGatewayPort {
                 customerId = customer.getId();
 
                 pm.attach(PaymentMethodAttachParams.builder().setCustomer(customerId).build());
-                log.info("Payment Method linked successfully to Customer: {}", customerId);
+                log.info("Linked [PaymentMethod] to Stripe customer successfully | customerId: {}", customerId);
             }
 
             // Stripe no usa decimales -> Céntimos
@@ -82,15 +82,15 @@ public class StripePaymentAdapter implements PaymentGatewayPort {
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
             if (!"succeeded".equals(paymentIntent.getStatus())) {
-                log.error("Error while charging in Stripe: {}", paymentIntent.getStatus());
+                log.warn("Stripe charge returned non-success status | status: {}, customerId: {}, amountInCents: {}",
+                        paymentIntent.getStatus(), customerId, amountInCents);
                 throw new RuntimeException("Stripe charge failed with status: " + paymentIntent.getStatus());
             }
 
-            // Log en double
-            log.info("Charged {} cents to Customer: {} cents in Stripe", amountInCents, customerId);
+            log.info("Processed [StripeCharge] successfully | customerId: {}, amountInCents: {}", customerId, amountInCents);
 
         } catch (Exception e) {
-            log.error("Critical error while charging in Stripe: {}", e.getMessage());
+            log.error("Stripe adapter failed to execute recurring charge", e);
             throw new RuntimeException("Error executing recurring charge in Stripe", e);
         }
     }

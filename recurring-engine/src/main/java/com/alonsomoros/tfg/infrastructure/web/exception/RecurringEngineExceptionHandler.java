@@ -17,7 +17,7 @@ public class RecurringEngineExceptionHandler {
 
     @ExceptionHandler(PaymentMethodNotFoundException.class)
     public ResponseEntity<String> handlePaymentMethodNotFound(PaymentMethodNotFoundException e) {
-        log.warn("Payment method not found: {}", e.getMessage());
+        log.info("[PaymentMethodNotFound] {}", e.getMessage());
         return ResponseEntity.notFound().build();
     }
 
@@ -36,7 +36,7 @@ public class RecurringEngineExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericError(Exception ex) {
-        log.error("Uncontrolled error occurred", ex);
+        log.error("Unhandled exception while processing request", ex);
         return ResponseEntity.internalServerError().body("Internal server error occurred: " + ex.getMessage());
     }
 }

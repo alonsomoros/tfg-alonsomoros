@@ -17,7 +17,7 @@ public class SubscriptionServiceExceptionHandler {
 
     @ExceptionHandler(SubscriptionNotFoundException.class)
     public ResponseEntity<String> handleSubscriptionNotFound(SubscriptionNotFoundException e) {
-        log.warn("Subscription not found: {}", e.getMessage());
+        log.info("[SubscriptionNotFound] {}", e.getMessage());
         return ResponseEntity.notFound().build();
     }
 
@@ -36,7 +36,7 @@ public class SubscriptionServiceExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericError(Exception ex) {
-        log.error("Uncontrolled error occurred", ex);
+        log.error("Unhandled exception while processing request", ex);
         return ResponseEntity.internalServerError().body("Internal server error occurred: " + ex.getMessage());
     }
 }

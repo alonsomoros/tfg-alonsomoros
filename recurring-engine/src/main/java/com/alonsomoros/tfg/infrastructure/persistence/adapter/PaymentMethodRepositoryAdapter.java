@@ -24,7 +24,8 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
 
     @Override
     public PaymentMethod save(PaymentMethod paymentMandate) {
-        log.info("Saving payment method in BBDD | ID: {}", paymentMandate.getId());
+        log.debug("Persisting [PaymentMethod] in DB | paymentMandateId: {}, subscriptionId: {}",
+                paymentMandate.getId(), paymentMandate.getSubscriptionId());
         PaymentMethodEntity entity = mapper.toEntity(paymentMandate);
         PaymentMethodEntity savedEntity = repository.save(entity);
         return mapper.toDomain(savedEntity);
@@ -32,7 +33,7 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
 
     @Override
     public PaymentMethod findById(UUID id) {
-        log.info("Finding payment method in BBDD | ID: {}", id);
+        log.debug("Loading [PaymentMethod] from DB | paymentMandateId: {}", id);
         PaymentMethodEntity entity = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("Payment method not found with ID: " + id));
         return mapper.toDomain(entity);
@@ -40,13 +41,13 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
 
     @Override
     public void deleteById(UUID id) {
-        log.info("Deleting payment method in BBDD | ID: {}", id);
+        log.debug("Deleting [PaymentMethod] from DB | paymentMandateId: {}", id);
         repository.deleteById(id);
     }
 
     @Override
     public boolean existsActiveBySubscriptionId(UUID subscriptionId) {
-        log.info("Checking for active payment method in BBDD | Subscription ID: {}", subscriptionId);
+        log.debug("Checking active [PaymentMethod] in DB | subscriptionId: {}", subscriptionId);
         return repository.existsActiveBySubscriptionId(subscriptionId);
     }
 

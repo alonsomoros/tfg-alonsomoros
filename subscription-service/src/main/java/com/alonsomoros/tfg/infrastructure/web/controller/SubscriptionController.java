@@ -38,7 +38,7 @@ public class SubscriptionController {
     @Operation(summary = "Check service health", description = "Health check endpoint used to verify that the service is running")
     @GetMapping("/health")
     public String health() {
-        log.info("Health check endpoint called.");
+        log.debug("Health check endpoint called for <<<Subscription Service>>>.");
         return "Subscription service is healthy.";
     }
 
@@ -50,10 +50,12 @@ public class SubscriptionController {
     })
     @PostMapping(EndpointConstants.CREATE_SUBSCRIPTION)
     public SubscriptionResponseDto createSubscription(@RequestBody SubscriptionRequestDto subscriptionRequestDto) {
-        log.info("Received [SubscriptionRequest] | email: {}", subscriptionRequestDto.customerEmail());
+        log.info("Received [SubscriptionRequest] from <<<Frontend>>> | customerEmail: {}, planCode: {}",
+            subscriptionRequestDto.customerEmail(), subscriptionRequestDto.planId());
         SubscriptionResponseDto response = subscriptionService
                 .createSubscription(webSubscriptionMapper.toCommand(subscriptionRequestDto));
-        log.info("Processed [SubscriptionRequest] successfully | email: {}", response.customerEmail());
+        log.info("Processed [SubscriptionRequest] successfully | customerEmail: {}, planCode: {}",
+            response.customerEmail(), response.planId());
         return response;
     }
 
@@ -67,8 +69,10 @@ public class SubscriptionController {
     public String updatePaymentDate(
             @PathVariable("subscriptionId") UUID subscriptionId,
             @RequestBody UpdatePaymentDateRequestDto requestDto) {
-        log.info("Request to update payment date of subscription {} to {}", subscriptionId, requestDto.newPaymentDate());
+        log.info("Received [UpdatePaymentDateRequest] from <<<Frontend>>> | subscriptionId: {}, newPaymentDate: {}",
+            subscriptionId, requestDto.newPaymentDate());
         subscriptionService.updatePaymentDate(subscriptionId, requestDto.newPaymentDate());
+        log.info("Processed [UpdatePaymentDateRequest] successfully | subscriptionId: {}", subscriptionId);
         return "Payment date of subscription " + subscriptionId + " updated successfully to " + requestDto.newPaymentDate();
     }
 

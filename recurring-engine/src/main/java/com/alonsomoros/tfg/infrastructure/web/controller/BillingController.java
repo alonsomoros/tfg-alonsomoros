@@ -29,9 +29,11 @@ public class BillingController {
             @PathVariable UUID mandateId,
             @RequestBody ChargeRequestDto request) {
             
-        log.info("Received charge request for mandate: {} with amount: {}", mandateId, request.amount());
+        log.info("Received [ChargeRequest] from <<<Subscription Service>>> | paymentMandateId: {}, amount: {}",
+                mandateId, request.amount());
         
         processChargeService.executeCharge(mandateId, request.amount());
+        log.info("Processed [ChargeRequest] successfully | paymentMandateId: {}", mandateId);
         
         return ResponseEntity.ok(new ChargeMandateResponseDto("Charge processed successfully for mandate: " + mandateId)); 
         // Si todo va bien devuelve 200 OK. Si la pasarela falla, tu UseCase lanzará una excepción (ej. PaymentFailedException) y devolverás un 400/500.

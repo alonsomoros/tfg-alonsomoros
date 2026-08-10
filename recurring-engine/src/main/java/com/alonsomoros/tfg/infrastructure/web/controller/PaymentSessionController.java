@@ -26,9 +26,9 @@ public class PaymentSessionController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createSetupIntent(@Valid @RequestBody PaymentSessionRequestDto request) {
-        log.debug("Obtaining Stripe client secret for setup intent...");
+        log.info("Received [PaymentSessionRequest] from <<<Frontend>>> | customerEmail: {}", request.customerEmail());
         String clientSecret = sessionService.getStripeClientSecret(request.customerEmail());
-        log.debug("Stripe client secret obtained successfully.");
+        log.info("Processed [PaymentSessionRequest] successfully | customerEmail: {}", request.customerEmail());
         return ResponseEntity.ok(Map.of("clientSecret", clientSecret));
     }
 }

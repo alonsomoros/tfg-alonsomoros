@@ -26,15 +26,17 @@ public class PaymentMethodController {
 
     @GetMapping("/health")
     public String health() {
-        log.info("Health check endpoint called.");
+        log.debug("Health check endpoint called for <<<Recurring Engine>>>.");
         return "Recurring Engine is healthy.";
     }
 
     @PostMapping("/tokens")
     public ResponseEntity<PaymentMandateResponseDto> receiveToken(@RequestBody PaymentMethodRequestDto requestDto) {
-        log.info("Received [Payment Method Request] from <<<Subscription Service Component>>> | ID: {}", requestDto.subscriptionId());
+        log.info("Received [PaymentMethodRequest] from <<<Subscription Service>>> | subscriptionId: {}, provider: {}",
+                requestDto.subscriptionId(), requestDto.paymentInfo().provider());
         PaymentMandateResponseDto responseDto = recurringEngineService.registerPaymentMandate(paymentMethodMapper.toCommand(requestDto));
-        log.info("Processed [Payment Method Request] successfully | ID: {}", requestDto.subscriptionId());
+        log.info("Processed [PaymentMethodRequest] successfully | subscriptionId: {}, paymentMandateId: {}",
+                requestDto.subscriptionId(), responseDto.paymentMandateId());
         return ResponseEntity.ok(responseDto);
     }
     

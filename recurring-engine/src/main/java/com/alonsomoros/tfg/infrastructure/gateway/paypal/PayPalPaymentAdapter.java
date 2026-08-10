@@ -36,13 +36,15 @@ public class PayPalPaymentAdapter implements PaymentGatewayPort {
 
     @Override
     public void charge(String vaultToken, BigDecimal amount) {
-        log.info("Starting recurring payment with PayPal. Token: {}, Amount: {}", vaultToken, amount);
+        log.info("Starting [PayPalCharge] | provider: PAYPAL, tokenSuffix: {}, amount: {}",
+                vaultToken.length() > 6 ? vaultToken.substring(vaultToken.length() - 6) : vaultToken,
+                amount);
 
         if (simulationMode) {
-            log.warn("[DEBUG MODE] Avoiding Reference Transaction call due to lack of permissions on Sandbox account.");
+            log.warn("Simulation mode enabled; skipping live PayPal reference transaction call.");
             try {
                 Thread.sleep(800);
-                log.info("[MOCK] Charge of {} EUR successful with PayPal off-session.", amount);
+                log.info("Processed [PayPalCharge] in simulation mode successfully | amount: {} EUR", amount);
                 return;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -55,24 +57,24 @@ public class PayPalPaymentAdapter implements PaymentGatewayPort {
             String accessToken = getAccessToken();
 
             String jsonBody = """
-                {
-                  "intent": "CAPTURE",
-                  "purchase_units": [
                     {
-                      "amount": {
-                        "currency_code": "EUR",
-                        "value": "%s"
+                      "intent": "CAPTURE",
+                      "purchase_units": [
+                        {
+                          "amount": {
+                            "currency_code": "EUR",
+                            "value": "%s"
+                          }
+                        }
+                      ],
+                      "payment_source": {
+                        "token": {
+                          "id": "%s",
+                          "type": "BILLING_AGREEMENT"
+                        }
                       }
                     }
-                  ],
-                  "payment_source": {
-                    "token": {
-                      "id": "%s",
-                      "type": "BILLING_AGREEMENT"
-                    }
-                  }
-                }
-                """.formatted(amount.toString(), vaultToken);
+                    """.formatted(amount.toString(), vaultToken);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_BASE_URL + "/v2/checkout/orders"))
@@ -84,14 +86,15 @@ public class PayPalPaymentAdapter implements PaymentGatewayPort {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200 || response.statusCode() == 201) {
-                log.info("Paypal Recurring Payment successful. Order created/captured for token: {}", vaultToken);
+                log.info("Processed [PayPalCharge] successfully | httpStatus: {}", response.statusCode());
             } else {
-                log.error("Error in Paypal payment. HTTP code: {}. Body: {}", response.statusCode(), response.body());
+                log.error("PayPal charge failed | httpStatus: {}, responseBody: {}", response.statusCode(),
+                        response.body());
                 throw new RuntimeException("Error in off-session payment for PayPal: " + response.body());
             }
 
         } catch (Exception e) {
-            log.error("Communication failure with PayPal: {}", e.getMessage());
+            log.error("PayPal adapter communication failure", e);
             throw new RuntimeException("Failure in PayPal adapter", e);
         }
     }
@@ -108,6 +111,6 @@ public class PayPalPaymentAdapter implements PaymentGatewayPort {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body().split("\"access_token\":\"")[1].split("\"")[0]; 
+        return response.body().split("\"access_token\":\"")[1].split("\"")[0];
     }
 }

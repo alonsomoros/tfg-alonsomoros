@@ -24,7 +24,7 @@ public class PlanRepositoryAdapter implements PlanRepositoryPort {
 
     @Override
     public List<Plan> findAllActivePlans() {
-        log.info("Finding all active plans");
+        log.debug("Loading active [Plan] list from DB.");
         return planRepository.findByIsActiveTrue().stream()
                 .map(planEntityMapper::toDomain)
                 .collect(Collectors.toList());
@@ -32,7 +32,7 @@ public class PlanRepositoryAdapter implements PlanRepositoryPort {
 
     @Override
     public Plan findByCode(String code) {
-        log.info("Finding plan by code | {}", code);
+        log.debug("Loading [Plan] from DB | planCode: {}", code);
         return planRepository.findByCode(code).stream()
                 .findFirst()
                 .map(planEntityMapper::toDomain)
@@ -41,7 +41,7 @@ public class PlanRepositoryAdapter implements PlanRepositoryPort {
 
     @Override
     public Plan save(Plan plan) {
-        log.info("Saving plan in BBDD | {}", plan);
+        log.debug("Persisting [Plan] in DB | planCode: {}", plan.getCode());
         return planEntityMapper.toDomain(planRepository.save(planEntityMapper.toEntity(plan)));
     }
 }
