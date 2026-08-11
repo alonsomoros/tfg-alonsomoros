@@ -2,8 +2,12 @@ package com.alonsomoros.tfg.infrastructure.web.dto.request;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
 public record ChargeRequestDto(
-    @JsonProperty("amount") BigDecimal amount
+    
+    @NotNull
+    @Schema(description = "The amount to be charged", example = "199.99")
+    BigDecimal amount
 ) {}

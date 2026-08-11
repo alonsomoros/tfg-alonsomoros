@@ -10,6 +10,7 @@ import com.alonsomoros.tfg.application.port.in.IProcessChargeService;
 import com.alonsomoros.tfg.domain.model.PaymentMethod;
 import com.alonsomoros.tfg.domain.port.PaymentMethodRepositoryPort;
 import com.alonsomoros.tfg.domain.port.out.PaymentGatewayPort;
+import com.alonsomoros.tfg.infrastructure.web.dto.response.ChargeMandateResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,11 +22,12 @@ public class ProcessChargeServiceImpl implements IProcessChargeService {
     private final PaymentGatewayFactory gatewayFactory;
 
     @Override
-    public void executeCharge(UUID mandateId, BigDecimal amount) {
+    public ChargeMandateResponseDto executeCharge(UUID mandateId, BigDecimal amount) {
         PaymentMethod mandate = paymentMethodRepository.findById(mandateId);
 
         PaymentGatewayPort paymentGateway = gatewayFactory.getGateway(mandate.getProvider());
 
         paymentGateway.charge(mandate.getToken(), amount);
+        return new ChargeMandateResponseDto("Charge processed successfully for mandate: " + mandateId);
     }
 }

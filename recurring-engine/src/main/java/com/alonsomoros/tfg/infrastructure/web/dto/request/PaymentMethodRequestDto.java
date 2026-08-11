@@ -10,35 +10,36 @@ import jakarta.validation.constraints.Size;
 public record PaymentMethodRequestDto(
 
     @NotNull
-    @Schema(example = "c3f09cb2-bf6a-4f82-8f8f-508041f83dc3")
+    @Schema( description = "UUID of the subscription for which the payment method is being added", example = "c3f09cb2-bf6a-4f82-8f8f-508041f83dc3")
     UUID subscriptionId,
 
     @NotBlank
-    PaymentInfoDto paymentInfo
+    @Schema(description = "Info about the payment method saved for the subscription")
+    PaymentInfoRequestDto paymentInfo
 ) {
-    public record PaymentInfoDto(
+    public record PaymentInfoRequestDto(
         @NotBlank 
-        @Schema(example = "STRIPE") 
+        @Schema(description = "The payment provider", example = "STRIPE") 
         String provider,
 
         @NotBlank 
-        @Schema(example = "xPtZWl263hmJ6ZxkQ8oLPkATHVojJ3Db") 
+        @Schema(description = "The token representing the payment method", example = "xPtZWl263hmJ6ZxkQ8oLPkATHVojJ3Db") 
         String token,
 
         @NotBlank 
-        @Schema(example = "Alonso Moros") 
+        @Schema(description = "The name of the cardholder", example = "Alonso Moros") 
         String cardHolder,
 
         @NotBlank @Size(min = 2, max = 2)
-        @Schema(example = "01") 
+        @Schema(description = "The expiry month of the card", example = "01") 
         String expiryMonth,
 
         @NotBlank @Size(min = 4, max = 4)
-        @Schema(example = "2030") 
+        @Schema(description = "The expiry year of the card", example = "2030") 
         String expiryYear,
 
         @NotBlank @Size(min = 4, max = 4)
-        @Schema(example = "1234") 
+        @Schema(description = "The last four digits of the card", example = "1234") 
         String last4
     ) {}
 }
