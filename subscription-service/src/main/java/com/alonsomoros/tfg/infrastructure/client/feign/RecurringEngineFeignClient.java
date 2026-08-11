@@ -5,15 +5,14 @@ import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.ChargeMandateResponseDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMethodResponseDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.ChargeRequestDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMethodRequestDto;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
-@FeignClient(name = "recurring-engine", url = "http://localhost:8081/api/v1")
+@FeignClient(name = "recurring-engine", url = "${recurring.engine.url}")
 public interface RecurringEngineFeignClient {
 
     @PostMapping("/payment-methods/tokens")

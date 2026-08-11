@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres-subscription:
     image: postgres:15-alpine
@@ -5,7 +7,7 @@ services:
     env_file:
       - .env.subscription
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - subscription_data:/var/lib/postgresql/data
     restart: no
@@ -16,9 +18,45 @@ services:
     env_file:
       - .env.recurring
     ports:
-      - "5433:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - recurring_data:/var/lib/postgresql/data
+    restart: no
+
+  subscription-app:
+    build:
+      context: ./subscription-service
+    container_name: tfg-subscription-app
+    env_file:
+      - .env.subscription
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - postgres-subscription
+    environment:
+      - RECURRING_ENGINE_URL=http://recurring-app:8081/api/v1
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-subscription:5432/subscription_db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    restart: no
+
+  recurring-app:
+    build:
+      context: ./recurring-engine
+    container_name: tfg-recurring-app
+    env_file:
+      - .env.recurring
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - postgres-recurring
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-recurring:5432/recurring_db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET}
     restart: no
 
 volumes:
