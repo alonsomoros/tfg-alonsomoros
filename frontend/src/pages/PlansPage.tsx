@@ -4,6 +4,13 @@ import { getPlans } from "../api/subscriptionServiceApi";
 import type { PlanResponse } from "../features/types";
 import "./PlansPage.css";
 
+function getErrorMessage(error: unknown, fallbackMessage: string): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return fallbackMessage;
+}
+
 const currencyFormatter = new Intl.NumberFormat("es-ES", {
   style: "currency",
   currency: "EUR",
@@ -35,7 +42,7 @@ export function PlansPage() {
         const response = await getPlans();
         setPlans(response);
       } catch (loadError) {
-        setError("No se han podido cargar los planes disponibles.");
+        setError(getErrorMessage(loadError, "Could not load available plans."));
       } finally {
         setLoading(false);
       }

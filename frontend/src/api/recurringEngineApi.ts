@@ -1,4 +1,5 @@
 import { httpClient } from './httpClient'
+import { mapApiError } from './apiErrorMapper';
 
 export const createSetupIntent = async (customerEmail: string): Promise<{ clientSecret: string }> => {
     try {
@@ -6,6 +7,6 @@ export const createSetupIntent = async (customerEmail: string): Promise<{ client
         return response.data; 
     } catch (error) {
         console.error('Error connecting to the Recurring Engine:', error);
-        throw new Error('The payment service is not available at this time.');
+        throw new Error(mapApiError(error, 'payment'));
     }
 };

@@ -6,6 +6,13 @@ import { StripePaymentForm, } from '../components/payment/StripePaymentForm';
 import type { PlanResponse, SubscriptionPayload } from "../features/types";
 import './SubscriptionForm.css';
 
+function getErrorMessage(error: unknown, fallbackMessage: string): string {
+    if (error instanceof Error && error.message) {
+        return error.message;
+    }
+    return fallbackMessage;
+}
+
 export function SubscriptionForm() {
     const [plan, setPlan] = useState<PlanResponse | null>(null);
     const navigate = useNavigate();
@@ -71,7 +78,7 @@ export function SubscriptionForm() {
             navigate('/');
             
         } catch (err) {
-            setError('Error while processing the subscription.');
+            setError(getErrorMessage(err, 'Error while processing the subscription.'));
         } finally {
             setIsSubmitting(false);
         }

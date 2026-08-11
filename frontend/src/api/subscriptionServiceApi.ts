@@ -1,5 +1,6 @@
 import type { SubscriptionPayload } from '../features/types';
 import { httpClient } from './httpClient'
+import { mapApiError } from './apiErrorMapper';
 
 export const createSubscription = async (payload: SubscriptionPayload) => {
     try {
@@ -8,7 +9,7 @@ export const createSubscription = async (payload: SubscriptionPayload) => {
         console.log('Subscription Response:', response.data);
         return response.data;
     } catch (error) {
-        throw new Error('Failed to create the subscription');
+    throw new Error(mapApiError(error, 'subscription'));
     }
 };
 
@@ -22,6 +23,10 @@ export interface PlanResponse {
 }
 
 export const getPlans = async () => {
-  const response = await httpClient.get<PlanResponse[]>('plans/getPlans');
-  return response.data;
+  try {
+    const response = await httpClient.get<PlanResponse[]>('plans/getPlans');
+    return response.data;
+  } catch (error) {
+    throw new Error(mapApiError(error, 'plans'));
+  }
 }

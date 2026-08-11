@@ -3,6 +3,13 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { createSetupIntent } from '../../api/recurringEngineApi';
 
+function getErrorMessage(error: unknown, fallbackMessage: string): string {
+    if (error instanceof Error && error.message) {
+        return error.message;
+    }
+    return fallbackMessage;
+}
+
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
 
 if (!stripePublicKey) {
@@ -74,7 +81,7 @@ export const StripePaymentForm: React.FC<StripeFormProps> = ({ onSuccess, disabl
                 const data = await createSetupIntent(customerEmail);
                 setClientSecret(data.clientSecret);
             } catch (err) {
-                setConnectionError("Failed to connect to the secure payment gateway.");
+                setConnectionError(getErrorMessage(err, "Failed to connect to the secure payment gateway."));
             }
         };
 

@@ -1,4 +1,5 @@
 import { httpClient } from './httpClient'
+import { mapApiError } from './apiErrorMapper';
 
 export const checkSubscriptionServiceHealth = async () => {
     try {
@@ -7,7 +8,7 @@ export const checkSubscriptionServiceHealth = async () => {
         console.log('Subscription Service Health Check Response:', response.data);
         return response.data;
     } catch (error) {
-        throw new Error('Subscription Service backend is unavailable');
+        throw new Error(mapApiError(error, 'health'));
     }
 };
 
@@ -18,6 +19,6 @@ export const checkRecurringEngineHealth = async () => {
         console.log('Recurring Engine Health Check Response:', response.data);
         return response.data;
     } catch (error) {
-        throw new Error('Recurring Engine backend is unavailable');
+        throw new Error(mapApiError(error, 'health'));
     }
 };
