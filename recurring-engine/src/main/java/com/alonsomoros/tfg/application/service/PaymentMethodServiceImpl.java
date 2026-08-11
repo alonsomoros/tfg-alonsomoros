@@ -7,7 +7,7 @@ import com.alonsomoros.tfg.application.port.in.IPaymentMethodService;
 import com.alonsomoros.tfg.domain.exception.PaymentMethodAlreadyExistsException;
 import com.alonsomoros.tfg.domain.model.PaymentMethod;
 import com.alonsomoros.tfg.domain.port.PaymentMethodRepositoryPort;
-import com.alonsomoros.tfg.infrastructure.web.dto.response.PaymentMandateResponseDto;
+import com.alonsomoros.tfg.infrastructure.web.dto.response.PaymentMethodResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
     private final PaymentMethodRepositoryPort repositoryPort;
 
     @Override
-    public PaymentMandateResponseDto registerPaymentMandate(RegisterPaymentMethodCommand command) {
+    public PaymentMethodResponseDto registerPaymentMethod(RegisterPaymentMethodCommand command) {
         log.info(
                 "Processing [PaymentMethod] registration from <<<Subscription Service>>> | subscriptionId: {}, provider: {}",
                 command.subscriptionId(), command.provider());
@@ -41,9 +41,9 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
         mandate.setActive(true);
 
         PaymentMethod savedMandate = repositoryPort.save(mandate);
-        log.info("Registered [PaymentMethod] successfully | paymentMandateId: {}, subscriptionId: {}, provider: {}",
+        log.info("Registered [PaymentMethod] successfully | paymentMethodId: {}, subscriptionId: {}, provider: {}",
                 savedMandate.getId(), savedMandate.getSubscriptionId(), savedMandate.getProvider());
-        return new PaymentMandateResponseDto(savedMandate.getId());
+        return new PaymentMethodResponseDto(savedMandate.getId());
     }
 
 }

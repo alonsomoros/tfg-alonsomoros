@@ -23,17 +23,17 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
     private final PaymentMethodMapper mapper;
 
     @Override
-    public PaymentMethod save(PaymentMethod paymentMandate) {
-        log.debug("Persisting [PaymentMethod] in DB | paymentMandateId: {}, subscriptionId: {}",
-                paymentMandate.getId(), paymentMandate.getSubscriptionId());
-        PaymentMethodEntity entity = mapper.toEntity(paymentMandate);
+    public PaymentMethod save(PaymentMethod paymentMethod) {
+        log.debug("Persisting [PaymentMethod] in DB | paymentMethodId: {}, subscriptionId: {}",
+                paymentMethod.getId(), paymentMethod.getSubscriptionId());
+        PaymentMethodEntity entity = mapper.toEntity(paymentMethod);
         PaymentMethodEntity savedEntity = repository.save(entity);
         return mapper.toDomain(savedEntity);
     }
 
     @Override
     public PaymentMethod findById(UUID id) {
-        log.debug("Loading [PaymentMethod] from DB | paymentMandateId: {}", id);
+        log.debug("Loading [PaymentMethod] from DB | paymentMethodId: {}", id);
         PaymentMethodEntity entity = repository.findById(id)
                 .orElseThrow(() -> new PaymentMethodNotFoundException("Payment method not found with ID: " + id));
         return mapper.toDomain(entity);
@@ -41,7 +41,7 @@ public class PaymentMethodRepositoryAdapter implements PaymentMethodRepositoryPo
 
     @Override
     public void deleteById(UUID id) {
-        log.debug("Deleting [PaymentMethod] from DB | paymentMandateId: {}", id);
+        log.debug("Deleting [PaymentMethod] from DB | paymentMethodId: {}", id);
         repository.deleteById(id);
     }
 

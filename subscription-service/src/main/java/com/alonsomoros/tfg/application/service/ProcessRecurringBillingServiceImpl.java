@@ -45,12 +45,12 @@ public class ProcessRecurringBillingServiceImpl implements IProcessRecurringBill
             try {
                 Plan plan = planRepository.findByCode(subscription.getPlanId());
 
-                log.info("Sending [ChargeRequest] to <<<Recurring Engine>>> | subscriptionId: {}, paymentMandateId: {}, planCode: {}, amount: {}",
-                        subscription.getId(), subscription.getExternalPaymentMandateId(), plan.getCode(), plan.getAmount());
+                log.info("Sending [ChargeRequest] to <<<Recurring Engine>>> | subscriptionId: {}, paymentMethodId: {}, planCode: {}, amount: {}",
+                        subscription.getId(), subscription.getExternalPaymentMethodId(), plan.getCode(), plan.getAmount());
                 ChargeRequestDto requestDto = new ChargeRequestDto(plan.getAmount());
 
                 recurringEngineClient.chargeMandate(
-                    subscription.getExternalPaymentMandateId(), 
+                    subscription.getExternalPaymentMethodId(), 
                     requestDto
                 );
 

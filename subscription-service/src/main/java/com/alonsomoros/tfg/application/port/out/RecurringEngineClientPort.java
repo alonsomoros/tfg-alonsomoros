@@ -4,11 +4,11 @@ import java.util.UUID;
 
 import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand.PaymentDetailsCommand;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.ChargeMandateResponseDto;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResponseDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMethodResponseDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.ChargeRequestDto;
 
 public interface RecurringEngineClientPort {
-    PaymentMandateResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentInfoCommand);
+    PaymentMethodResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentInfoCommand);
 
-    ChargeMandateResponseDto chargeMandate(UUID externalPaymentMandateId, ChargeRequestDto requestDto);
+    ChargeMandateResponseDto chargeMandate(UUID externalPaymentMethodId, ChargeRequestDto requestDto);
 }

@@ -8,10 +8,10 @@ import com.alonsomoros.tfg.application.command.CreateSubscriptionCommand.Payment
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.infrastructure.client.feign.RecurringEngineFeignClient;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.ChargeMandateResponseDto;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResponseDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMethodResponseDto;
 import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.ChargeRequestDto;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMandateRequestDto;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMandateRequestDto.PaymentInfoRequestDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMethodRequestDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.out.PaymentMethodRequestDto.PaymentInfoRequestDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
     private final RecurringEngineFeignClient feignClient;
 
     @Override
-    public PaymentMandateResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentDetails) {
+    public PaymentMethodResponseDto sendPaymentToken(UUID subscriptionId, PaymentDetailsCommand paymentDetails) {
         log.info("Sending [PaymentMethodRequest] to <<<Recurring Engine>>> | subscriptionId: {}, provider: {}",
             subscriptionId, paymentDetails.provider());
 
@@ -37,21 +37,21 @@ public class RecurringEngineClientAdapter implements RecurringEngineClientPort {
             paymentDetails.last4()
         );
 
-        PaymentMandateRequestDto paymentMandateRequest = new PaymentMandateRequestDto(subscriptionId, paymentInfoRequest);
+        PaymentMethodRequestDto paymentMethodRequest = new PaymentMethodRequestDto(subscriptionId, paymentInfoRequest);
 
-        PaymentMandateResponseDto response = feignClient.sendToken(paymentMandateRequest);
-        log.info("Received [PaymentMethodResponse] from <<<Recurring Engine>>> | subscriptionId: {}, paymentMandateId: {}",
-            subscriptionId, response.paymentMandateId());
+        PaymentMethodResponseDto response = feignClient.sendToken(paymentMethodRequest);
+        log.info("Received [PaymentMethodResponse] from <<<Recurring Engine>>> | subscriptionId: {}, paymentMethodId: {}",
+            subscriptionId, response.paymentMethodId());
         return response;
     }
 
     @Override
-    public ChargeMandateResponseDto chargeMandate(UUID externalPaymentMandateId, ChargeRequestDto requestAmount) {
-    log.info("Sending [ChargeRequest] to <<<Recurring Engine>>> | paymentMandateId: {}, amount: {}",
-        externalPaymentMandateId, requestAmount.amount());
-    ChargeMandateResponseDto response = feignClient.chargeMandate(externalPaymentMandateId, requestAmount);
-    log.info("Received [ChargeResponse] from <<<Recurring Engine>>> | paymentMandateId: {}, message: {}",
-        externalPaymentMandateId, response.message());
+    public ChargeMandateResponseDto chargeMandate(UUID externalPaymentMethodId, ChargeRequestDto requestAmount) {
+    log.info("Sending [ChargeRequest] to <<<Recurring Engine>>> | paymentMethodId: {}, amount: {}",
+        externalPaymentMethodId, requestAmount.amount());
+    ChargeMandateResponseDto response = feignClient.chargeMandate(externalPaymentMethodId, requestAmount);
+    log.info("Received [ChargeResponse] from <<<Recurring Engine>>> | paymentMethodId: {}, message: {}",
+        externalPaymentMethodId, response.message());
     return response;
     }
 

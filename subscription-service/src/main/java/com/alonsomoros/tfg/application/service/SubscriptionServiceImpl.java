@@ -14,7 +14,7 @@ import com.alonsomoros.tfg.domain.model.Subscription;
 import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
 import com.alonsomoros.tfg.domain.port.PlanRepositoryPort;
 import com.alonsomoros.tfg.domain.port.SubscriptionRepositoryPort;
-import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMandateResponseDto;
+import com.alonsomoros.tfg.infrastructure.client.feign.dto.in.PaymentMethodResponseDto;
 import com.alonsomoros.tfg.infrastructure.persistence.mapper.SubscriptionMapper;
 import com.alonsomoros.tfg.infrastructure.web.dto.response.SubscriptionResponseDto;
 
@@ -56,13 +56,13 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
         try {
         log.info("Sending [PaymentMethodRequest] to <<<Recurring Engine>>> | subscriptionId: {}",
                     subscription.getId());
-            PaymentMandateResponseDto paymentMandateResponse = recurringEngineClient.sendPaymentToken(
+            PaymentMethodResponseDto paymentMethodResponse = recurringEngineClient.sendPaymentToken(
                     subscription.getId(),
                     createSubscriptionCommand.paymentInfo());
-            subscription.markAsActive(paymentMandateResponse.paymentMandateId());
+            subscription.markAsActive(paymentMethodResponse.paymentMethodId());
             subscription = subscriptionRepository.save(subscription);
-        log.info("Activated [Subscription] successfully | subscriptionId: {}, paymentMandateId: {}",
-            subscription.getId(), paymentMandateResponse.paymentMandateId());
+        log.info("Activated [Subscription] successfully | subscriptionId: {}, paymentMethodId: {}",
+            subscription.getId(), paymentMethodResponse.paymentMethodId());
         } catch (Exception e) {
         log.warn("Recurring Engine call failed; subscription remains PENDING | subscriptionId: {}",
             subscription.getId(), e);

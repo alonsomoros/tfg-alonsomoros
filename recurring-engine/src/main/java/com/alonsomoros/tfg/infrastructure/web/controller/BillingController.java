@@ -24,16 +24,16 @@ public class BillingController {
 
     private final IProcessChargeService processChargeService;
 
-    @PostMapping("/charge/{mandateId}")
+    @PostMapping("/charge/{methodId}")
     public ResponseEntity<ChargeMandateResponseDto> chargeMandate(
-            @PathVariable UUID mandateId,
+            @PathVariable UUID methodId,
             @RequestBody ChargeRequestDto request) {
             
-        log.info("Received [ChargeRequest] from <<<Subscription Service>>> | paymentMandateId: {}, amount: {}",
-                mandateId, request.amount());
+        log.info("Received [ChargeRequest] from <<<Subscription Service>>> | paymentMethodId: {}, amount: {}",
+                methodId, request.amount());
         
-        ChargeMandateResponseDto response = processChargeService.executeCharge(mandateId, request.amount());
-        log.info("Processed [ChargeRequest] successfully | paymentMandateId: {}", mandateId);
+        ChargeMandateResponseDto response = processChargeService.executeCharge(methodId, request.amount());
+        log.info("Processed [ChargeRequest] successfully | paymentMethodId: {}", methodId);
         
         return ResponseEntity.ok(response); 
     }

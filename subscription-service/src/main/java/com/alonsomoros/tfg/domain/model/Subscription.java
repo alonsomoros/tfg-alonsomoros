@@ -21,7 +21,7 @@ public class Subscription {
 
     private UUID id;
 
-    private UUID externalPaymentMandateId;
+    private UUID externalPaymentMethodId;
 
     private String customerEmail;
 
@@ -31,11 +31,11 @@ public class Subscription {
 
     private LocalDate nextPaymentDate;
 
-    public void markAsActive(UUID mandateId) {
-        if (mandateId == null) {
-            throw new InvalidSubscriptionStateException("A subscription cannot be ACTIVE without a paymentMandateId");
+    public void markAsActive(UUID methodId) {
+        if (methodId == null) {
+            throw new InvalidSubscriptionStateException("A subscription cannot be ACTIVE without a paymentMethodId");
         }
-        this.externalPaymentMandateId = mandateId;
+        this.externalPaymentMethodId = methodId;
         this.status = SubscriptionStatusEnum.ACTIVE;
     }
 

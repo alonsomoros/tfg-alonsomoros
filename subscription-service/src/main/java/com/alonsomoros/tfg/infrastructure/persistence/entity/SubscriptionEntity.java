@@ -32,8 +32,8 @@ public class SubscriptionEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "external_payment_mandate_id", nullable = true)
-    private UUID externalPaymentMandateId;
+    @Column(name = "external_payment_method_id", nullable = true)
+    private UUID externalPaymentMethodId;
 
     @Column(name = "customer_email", nullable = false)
     private String customerEmail;

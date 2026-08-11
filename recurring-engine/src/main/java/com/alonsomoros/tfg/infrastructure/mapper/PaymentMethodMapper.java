@@ -18,13 +18,13 @@ public class PaymentMethodMapper {
                 .build();
     }
 
-    public PaymentMethodEntity toEntity(PaymentMethod paymentMandate) {
+    public PaymentMethodEntity toEntity(PaymentMethod paymentMethod) {
         return PaymentMethodEntity.builder()
-                .subscriptionId(paymentMandate.getSubscriptionId())
-                .provider(paymentMandate.getProvider())
-                .token(paymentMandate.getToken())
-                .last4(paymentMandate.getLast4())
-                .active(paymentMandate.isActive())
+                .subscriptionId(paymentMethod.getSubscriptionId())
+                .provider(paymentMethod.getProvider())
+                .token(paymentMethod.getToken())
+                .last4(paymentMethod.getLast4())
+                .active(paymentMethod.isActive())
                 .build();
     }
 

@@ -6,13 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record PaymentMandateRequestDto(
+public record PaymentMethodRequestDto(
     @NotNull
-    @Schema(description = "The unique identifier of the subscription for which the payment mandate is being created", example = "550e8400-e29b-41d4-a716-446655440000")
+    @Schema(description = "The unique identifier of the subscription for which the payment method is being created", example = "550e8400-e29b-41d4-a716-446655440000")
     UUID subscriptionId,
 
     @NotNull
-    @Schema(description = "The payment information required to create the payment mandate", implementation = PaymentInfoRequestDto.class)
+    @Schema(description = "The payment information required to create the payment method", implementation = PaymentInfoRequestDto.class)
     PaymentInfoRequestDto paymentInfo
 ) {
     public record PaymentInfoRequestDto(
