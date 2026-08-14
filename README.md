@@ -66,6 +66,14 @@ PAYPAL_CLIENT_ID=
 PAYPAL_CLIENT_SECRET=
 ```
 
+Archivo **.env** (En el root)
+```.env
+SUBSCRIPTION_DB_PORT=5432
+RECURRING_DB_PORT=5433
+SUBSCRIPTION_APP_PORT=8080
+RECURRING_APP_PORT=8081
+```
+
 Archivo **.env** (/frontend)
 ```.env
 VITE_STRIPE_PUBLIC_KEY=
@@ -73,6 +81,15 @@ VITE_PAYPAL_CLIENT_ID=
 VITE_SUBSCRIPTION_SERVICE_URL=
 VITE_RECURRING_ENGINE_URL=
 ```
+
+Puedes usar este comando para copiar los ejemplos:
+```bash
+cp .env.example .env
+cp .env.subscription.example .env.subscription
+cp .env.recurring.example .env.recurring
+```
+
+Pero deberás rellenar igualmente las variables Stripe/PayPal en .env.recurring
 
 ### 4. Despliegue del Ecosistema Backend (Docker)
 Levanta todos los microservicios y bases de datos con un solo comando:
