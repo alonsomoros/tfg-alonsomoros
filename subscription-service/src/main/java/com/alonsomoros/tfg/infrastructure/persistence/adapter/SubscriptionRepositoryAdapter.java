@@ -31,14 +31,17 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
             subscription.getId(), subscription.getCustomerEmail(), subscription.getStatus());
         SubscriptionEntity subscriptionEntity = subscriptionEntityMapper.toEntity(subscription);
         SubscriptionEntity savedEntity = subscriptionRepository.save(subscriptionEntity);
-        return subscriptionEntityMapper.toDomain(savedEntity);
-
+        Subscription domainSubscription = subscriptionEntityMapper.toDomain(savedEntity);
+        if (domainSubscription.getPlan() == null) {
+            domainSubscription.setPlan(subscription.getPlan());
+        }
+        return domainSubscription;
     }
 
     @Override
     public Subscription findById(UUID id) {
         log.debug("Loading [Subscription] from DB | subscriptionId: {}", id);
-        SubscriptionEntity subscriptionEntity = subscriptionRepository.findById(id)
+        SubscriptionEntity subscriptionEntity = subscriptionRepository.findByIdWithPlan(id)
                 .orElseThrow(() -> new SubscriptionNotFoundException("Subscription not found in BBDD | ID: " + id));
         return subscriptionEntityMapper.toDomain(subscriptionEntity);
     }
@@ -50,8 +53,8 @@ public class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
     }
 
     @Override
-    public boolean hasOngoingSubscription(String email, String planId) {
-        log.debug("Checking ongoing [Subscription] in DB | customerEmail: {}, planCode: {}", email, planId);
+    public boolean hasOngoingSubscription(String email, UUID planId) {
+        log.debug("Checking ongoing [Subscription] in DB | customerEmail: {}, planId: {}", email, planId);
         List<SubscriptionStatusEnum> ongoingStatuses = List.of(
                 SubscriptionStatusEnum.PENDING,
                 SubscriptionStatusEnum.ACTIVE);

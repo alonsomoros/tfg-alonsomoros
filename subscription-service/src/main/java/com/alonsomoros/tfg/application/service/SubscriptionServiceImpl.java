@@ -33,21 +33,23 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
 
     @Override
     public SubscriptionResponseDto createSubscription(CreateSubscriptionCommand createSubscriptionCommand) {
+
+        Plan plan = planRepository.findByCode(createSubscriptionCommand.planId());
+
         log.info("Processing [SubscriptionRequest] from <<<Frontend>>> | customerEmail: {}, planCode: {}",
             createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId());
-        if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(),
-                createSubscriptionCommand.planId())) {
-            log.warn("Rejected [SubscriptionRequest] because an ongoing subscription already exists | customerEmail: {}, planCode: {}",
+        if (subscriptionRepository.hasOngoingSubscription(createSubscriptionCommand.customerEmail(), plan.getId())) {
+            log.warn("Rejected [SubscriptionRequest] because an ongoing subscription already exists | customerEmail: {}, planId: {}",
                 createSubscriptionCommand.customerEmail(), createSubscriptionCommand.planId());
             throw new SubscriptionAlreadyOngoingException("Subscription already ongoing | email: "
                     + createSubscriptionCommand.customerEmail() + ", plan: " + createSubscriptionCommand.planId());
         }
-
+        
         Subscription subscription = subscriptionMapper.toDomain(createSubscriptionCommand);
         subscription.setStatus(SubscriptionStatusEnum.PENDING);
-
-        Plan plan = planRepository.findByCode(createSubscriptionCommand.planId());
+        subscription.setPlan(plan);
         subscription.setNextPaymentDate(plan.getBillingInterval());
+
 
         subscription = subscriptionRepository.save(subscription);
     log.info("Saved [Subscription] with PENDING status | subscriptionId: {}, customerEmail: {}",

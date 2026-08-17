@@ -56,19 +56,19 @@ class ProcessRecurringBillingServiceImplTest {
     void execute_whenChargeSucceeds_advancesNextPaymentDate() {
         UUID methodId = UUID.randomUUID();
         LocalDate dueDate = LocalDate.now();
-        Subscription subscription = Subscription.builder()
-                .id(UUID.randomUUID())
-                .customerEmail("user@example.com")
-                .planId("PRO_MONTHLY")
-                .status(SubscriptionStatusEnum.ACTIVE)
-                .externalPaymentMethodId(methodId)
-                .nextPaymentDate(dueDate)
-                .build();
         Plan plan = Plan.builder()
                 .code("PRO_MONTHLY")
                 .amount(new BigDecimal("19.99"))
                 .currency(CurrencyCode.EUR)
                 .billingInterval(BillingInterval.MONTHLY)
+                .build();
+        Subscription subscription = Subscription.builder()
+                .id(UUID.randomUUID())
+                .customerEmail("user@example.com")
+                .plan(plan)
+                .status(SubscriptionStatusEnum.ACTIVE)
+                .externalPaymentMethodId(methodId)
+                .nextPaymentDate(dueDate)
                 .build();
 
         when(subscriptionRepository.findSubscriptionsDueForBilling(dueDate)).thenReturn(List.of(subscription));
@@ -86,19 +86,19 @@ class ProcessRecurringBillingServiceImplTest {
     @Test
     void execute_whenChargeFails_marksPastDue() {
         UUID methodId = UUID.randomUUID();
-        Subscription subscription = Subscription.builder()
-                .id(UUID.randomUUID())
-                .customerEmail("user@example.com")
-                .planId("PRO_MONTHLY")
-                .status(SubscriptionStatusEnum.ACTIVE)
-                .externalPaymentMethodId(methodId)
-                .nextPaymentDate(LocalDate.now())
-                .build();
         Plan plan = Plan.builder()
                 .code("PRO_MONTHLY")
                 .amount(new BigDecimal("19.99"))
                 .currency(CurrencyCode.EUR)
                 .billingInterval(BillingInterval.MONTHLY)
+                .build();
+        Subscription subscription = Subscription.builder()
+                .id(UUID.randomUUID())
+                .customerEmail("user@example.com")
+                .plan(plan)
+                .status(SubscriptionStatusEnum.ACTIVE)
+                .externalPaymentMethodId(methodId)
+                .nextPaymentDate(LocalDate.now())
                 .build();
 
         when(subscriptionRepository.findSubscriptionsDueForBilling(LocalDate.now())).thenReturn(List.of(subscription));

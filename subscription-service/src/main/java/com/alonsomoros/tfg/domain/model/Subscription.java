@@ -25,7 +25,7 @@ public class Subscription {
 
     private String customerEmail;
 
-    private String planId;
+    private Plan plan;
 
     private SubscriptionStatusEnum status;
 

@@ -13,7 +13,7 @@ public interface SubscriptionRepositoryPort {
     
     void deleteById(UUID id);
     
-    boolean hasOngoingSubscription(String email, String planId);
+    boolean hasOngoingSubscription(String email, UUID planId);
 
     List<Subscription> findSubscriptionsDueForBilling(LocalDate date);
 }

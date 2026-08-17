@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alonsomoros.tfg.application.port.out.RecurringEngineClientPort;
 import com.alonsomoros.tfg.domain.model.SubscriptionStatusEnum;
@@ -51,6 +52,7 @@ class SubscriptionServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     void createSubscription_persistsActiveSubscription() throws Exception {
         UUID paymentMethodId = UUID.randomUUID();
         when(recurringEngineClient.sendPaymentToken(any(), any()))
@@ -81,7 +83,7 @@ class SubscriptionServiceIntegrationTest {
         assertThat(subscriptionRepository.findAll())
                 .anySatisfy(subscription -> {
                     assertThat(subscription.getCustomerEmail()).isEqualTo("integration@example.com");
-                    assertThat(subscription.getPlanId()).isEqualTo("PRO_MONTHLY");
+                    assertThat(subscription.getPlanEntity().getCode()).isEqualTo("PRO_MONTHLY");
                     assertThat(subscription.getStatus()).isEqualTo(SubscriptionStatusEnum.ACTIVE);
                     assertThat(subscription.getExternalPaymentMethodId()).isEqualTo(paymentMethodId);
                 });

@@ -74,7 +74,7 @@ class SubscriptionServiceImplTest {
         pendingSubscription = Subscription.builder()
                 .id(UUID.randomUUID())
                 .customerEmail(command.customerEmail())
-                .planId(command.planId())
+                .plan(plan)
                 .status(SubscriptionStatusEnum.PENDING)
                 .build();
     }
@@ -82,7 +82,7 @@ class SubscriptionServiceImplTest {
     @Test
     void createSubscription_whenNoOngoing_activatesAfterPaymentMethod() {
         UUID paymentMethodId = UUID.randomUUID();
-        when(subscriptionRepository.hasOngoingSubscription(command.customerEmail(), command.planId()))
+        when(subscriptionRepository.hasOngoingSubscription(command.customerEmail(), plan.getId()))
                 .thenReturn(false);
         when(subscriptionMapper.toDomain(command)).thenReturn(pendingSubscription);
         when(planRepository.findByCode(command.planId())).thenReturn(plan);
@@ -107,7 +107,8 @@ class SubscriptionServiceImplTest {
 
     @Test
     void createSubscription_whenOngoingExists_throwsConflict() {
-        when(subscriptionRepository.hasOngoingSubscription(command.customerEmail(), command.planId()))
+        when(planRepository.findByCode(command.planId())).thenReturn(plan);
+        when(subscriptionRepository.hasOngoingSubscription(command.customerEmail(), plan.getId()))
                 .thenReturn(true);
 
         assertThatThrownBy(() -> subscriptionService.createSubscription(command))
@@ -119,7 +120,7 @@ class SubscriptionServiceImplTest {
 
     @Test
     void createSubscription_whenRecurringEngineFails_keepsPending() {
-        when(subscriptionRepository.hasOngoingSubscription(command.customerEmail(), command.planId()))
+        when(subscriptionRepository.hasOngoingSubscription(command.customerEmail(), plan.getId()))
                 .thenReturn(false);
         when(subscriptionMapper.toDomain(command)).thenReturn(pendingSubscription);
         when(planRepository.findByCode(command.planId())).thenReturn(plan);
@@ -143,7 +144,7 @@ class SubscriptionServiceImplTest {
         Subscription existing = Subscription.builder()
                 .id(subscriptionId)
                 .customerEmail("user@example.com")
-                .planId("PRO_MONTHLY")
+                .plan(plan)
                 .status(SubscriptionStatusEnum.ACTIVE)
                 .nextPaymentDate(LocalDate.now())
                 .build();
