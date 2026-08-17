@@ -27,23 +27,23 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
 
         if (repositoryPort.existsActiveBySubscriptionId(command.subscriptionId())) {
             log.warn(
-                    "Rejected [PaymentMethod] registration because an active mandate already exists | subscriptionId: {}",
+                    "Rejected [PaymentMethod] registration because an active paymentMethod already exists | subscriptionId: {}",
                     command.subscriptionId());
             throw new PaymentMethodAlreadyExistsException(
                     "Payment Method already exists | ID: " + command.subscriptionId());
         }
 
-        PaymentMethod mandate = new PaymentMethod();
-        mandate.setSubscriptionId(command.subscriptionId());
-        mandate.setProvider(command.provider());
-        mandate.setToken(command.token());
-        mandate.setLast4(command.last4());
-        mandate.setActive(true);
+        PaymentMethod paymentMethod = new PaymentMethod();
+        paymentMethod.setSubscriptionId(command.subscriptionId());
+        paymentMethod.setProvider(command.provider());
+        paymentMethod.setToken(command.token());
+        paymentMethod.setLast4(command.last4());
+        paymentMethod.setActive(true);
 
-        PaymentMethod savedMandate = repositoryPort.save(mandate);
+        PaymentMethod savedpaymentMethod = repositoryPort.save(paymentMethod);
         log.info("Registered [PaymentMethod] successfully | paymentMethodId: {}, subscriptionId: {}, provider: {}",
-                savedMandate.getId(), savedMandate.getSubscriptionId(), savedMandate.getProvider());
-        return new PaymentMethodResponseDto(savedMandate.getId());
+                savedpaymentMethod.getId(), savedpaymentMethod.getSubscriptionId(), savedpaymentMethod.getProvider());
+        return new PaymentMethodResponseDto(savedpaymentMethod.getId());
     }
 
 }

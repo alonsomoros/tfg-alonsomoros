@@ -44,42 +44,42 @@ class ProcessChargeServiceImplTest {
 
     @Test
     void executeCharge_whenGatewaySucceeds_savesSuccessTransaction() {
-        UUID mandateId = UUID.randomUUID();
+        UUID paymentMethodId = UUID.randomUUID();
         BigDecimal amount = new BigDecimal("19.99");
-        PaymentMethod mandate = paymentMethod(mandateId);
+        PaymentMethod paymentMethod = paymentMethod(paymentMethodId);
 
-        when(paymentMethodRepository.findById(mandateId)).thenReturn(mandate);
+        when(paymentMethodRepository.findById(paymentMethodId)).thenReturn(paymentMethod);
         when(gatewayFactory.getGateway("STRIPE")).thenReturn(paymentGateway);
         when(transactionRepository.save(any(Transaction.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        ChargeMandateResponseDto response = processChargeService.executeCharge(mandateId, amount);
+        ChargeMandateResponseDto response = processChargeService.executeCharge(paymentMethodId, amount);
 
         verify(paymentGateway).charge("pm_123", amount);
 
         ArgumentCaptor<Transaction> captor = ArgumentCaptor.forClass(Transaction.class);
         verify(transactionRepository).save(captor.capture());
         Transaction saved = captor.getValue();
-        assertThat(saved.getPaymentMethod()).isEqualTo(mandate);
+        assertThat(saved.getPaymentMethod()).isEqualTo(paymentMethod);
         assertThat(saved.getAmount()).isEqualByComparingTo(amount);
         assertThat(saved.getStatus()).isEqualTo(TransactionStatusEnum.SUCCESS);
 
-        assertThat(response.message()).contains(mandateId.toString());
+        assertThat(response.message()).contains(paymentMethodId.toString());
         assertThat(response.message()).contains("SUCCESS");
     }
 
     @Test
     void executeCharge_whenGatewayFails_savesFailedTransactionAndThrows() {
-        UUID mandateId = UUID.randomUUID();
+        UUID paymentMethodId = UUID.randomUUID();
         BigDecimal amount = new BigDecimal("19.99");
-        PaymentMethod mandate = paymentMethod(mandateId);
+        PaymentMethod paymentMethod = paymentMethod(paymentMethodId);
 
-        when(paymentMethodRepository.findById(mandateId)).thenReturn(mandate);
+        when(paymentMethodRepository.findById(paymentMethodId)).thenReturn(paymentMethod);
         when(gatewayFactory.getGateway("STRIPE")).thenReturn(paymentGateway);
         doThrow(new PaymentGatewayException("Stripe declined"))
                 .when(paymentGateway).charge("pm_123", amount);
         when(transactionRepository.save(any(Transaction.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        assertThatThrownBy(() -> processChargeService.executeCharge(mandateId, amount))
+        assertThatThrownBy(() -> processChargeService.executeCharge(paymentMethodId, amount))
                 .isInstanceOf(PaymentGatewayException.class)
                 .hasMessage("Payment processing failed in gateway")
                 .hasCauseInstanceOf(PaymentGatewayException.class);
@@ -87,14 +87,14 @@ class ProcessChargeServiceImplTest {
         ArgumentCaptor<Transaction> captor = ArgumentCaptor.forClass(Transaction.class);
         verify(transactionRepository).save(captor.capture());
         Transaction saved = captor.getValue();
-        assertThat(saved.getPaymentMethod()).isEqualTo(mandate);
+        assertThat(saved.getPaymentMethod()).isEqualTo(paymentMethod);
         assertThat(saved.getAmount()).isEqualByComparingTo(amount);
         assertThat(saved.getStatus()).isEqualTo(TransactionStatusEnum.FAILED);
     }
 
-    private static PaymentMethod paymentMethod(UUID mandateId) {
+    private static PaymentMethod paymentMethod(UUID paymentMethodId) {
         return PaymentMethod.builder()
-                .id(mandateId)
+                .id(paymentMethodId)
                 .subscriptionId(UUID.randomUUID())
                 .provider("STRIPE")
                 .token("pm_123")
